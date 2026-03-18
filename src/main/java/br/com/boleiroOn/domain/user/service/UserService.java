@@ -1,6 +1,6 @@
 package br.com.boleiroOn.domain.user.service;
 
-import br.com.boleiroOn.config.infra.JwtToken;
+import br.com.boleiroOn.config.infra.configs.JwtToken;
 import br.com.boleiroOn.domain.user.dto.LoginRequestDto;
 import br.com.boleiroOn.domain.user.dto.LoginResponseDto;
 import br.com.boleiroOn.domain.user.dto.UserRegisterDto;

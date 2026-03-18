@@ -1,4 +1,4 @@
-package br.com.boleiroOn.config.infra;
+package br.com.boleiroOn.config.infra.configs;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
