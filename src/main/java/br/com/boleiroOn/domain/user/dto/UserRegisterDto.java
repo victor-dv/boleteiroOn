@@ -14,7 +14,6 @@ public record UserRegisterDto(
         String login,
         @NotBlank @Size(min = 6, max = 100)
         String password,
-        @NotBlank
         UserRole role
 ) {
 }

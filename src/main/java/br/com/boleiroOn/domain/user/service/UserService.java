@@ -1,5 +1,8 @@
 package br.com.boleiroOn.domain.user.service;
 
+import br.com.boleiroOn.config.infra.JwtToken;
+import br.com.boleiroOn.domain.user.dto.LoginRequestDto;
+import br.com.boleiroOn.domain.user.dto.LoginResponseDto;
 import br.com.boleiroOn.domain.user.dto.UserRegisterDto;
 import br.com.boleiroOn.domain.user.entity.UserEntity;
 import br.com.boleiroOn.domain.user.repository.UserRepository;
@@ -12,14 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final JwtToken jwtToken;
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
@@ -41,6 +41,18 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userRegisterDto.password()));
 
         return userRepository.save(user);
+    }
+
+    public LoginResponseDto login(LoginRequestDto request) {
+        var user = userRepository.findByLogin(request.login())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas"));
+
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas");
+        }
+
+        String token = jwtToken.generateToken(user.getLogin(), user.getId(), user.getRole().name());
+        return new LoginResponseDto(token, user.getName(), user.getEmail());
     }
 
 

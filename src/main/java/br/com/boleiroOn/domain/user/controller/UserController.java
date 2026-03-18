@@ -1,5 +1,7 @@
 package br.com.boleiroOn.domain.user.controller;
 
+import br.com.boleiroOn.domain.user.dto.LoginRequestDto;
+import br.com.boleiroOn.domain.user.dto.LoginResponseDto;
 import br.com.boleiroOn.domain.user.dto.UserRegisterDto;
 import br.com.boleiroOn.domain.user.dto.UserResponseDto;
 import br.com.boleiroOn.domain.user.service.UserService;
@@ -24,6 +26,11 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserResponseDto>> register(@RequestBody @Valid UserRegisterDto dto) {
             var user = userService.registerUser(dto);
             return ResponseEntity.ok(ApiResponse.success(UserResponseDto.from(user), "Usuário registrado com sucesso"));
+    }
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<LoginResponseDto>> login(@RequestBody @Valid LoginRequestDto request) {
+        LoginResponseDto response = userService.login(request);
+        return ResponseEntity.ok(ApiResponse.success(response, "Login realizado com sucesso"));
     }
 
 
