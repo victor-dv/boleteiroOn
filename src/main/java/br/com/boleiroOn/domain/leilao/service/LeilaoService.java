@@ -21,6 +21,15 @@ public class LeilaoService {
         leilao.setData(data.data());
         leilao.setImageUrl(data.imageUrl());
 
+        leilao.setComitenteNome(data.comitenteNome());
+        leilao.setComitenteDocumento(data.comitenteDocumento());
+        leilao.setEdital(data.edital());
+        leilao.setProcessoAdministrativo(data.processoAdministrativo());
+        leilao.setLeiloeiroNome(data.leiloeiroNome());
+        leilao.setLeiloeiroMatricula(data.leiloeiroMatricula());
+        leilao.setLeiloeiroDocumento(data.leiloeiroDocumento());
+        leilao.setCidadeUfPagamento(data.cidadeUfPagamento());
+
         return leilaoRepository.save(leilao);
     }
 

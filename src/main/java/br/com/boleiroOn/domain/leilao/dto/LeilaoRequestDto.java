@@ -14,6 +14,22 @@ public record LeilaoRequestDto(
         @FutureOrPresent
         LocalDate data,
 
-        String imageUrl
+        String imageUrl,
+
+        @NotBlank
+        String comitenteNome,
+        @NotBlank
+        String comitenteDocumento,
+        @NotBlank
+        String edital,
+        String processoAdministrativo,
+        @NotBlank
+        String leiloeiroNome,
+        @NotBlank
+        String leiloeiroMatricula,
+        @NotBlank
+        String leiloeiroDocumento,
+        @NotBlank
+        String cidadeUfPagamento
 ) {
 }

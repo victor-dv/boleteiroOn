@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/upload").hasRole("ADMIN")
                         .requestMatchers("/api/leiloes/**").hasRole("ADMIN")
                         .requestMatchers("/api/lotes/**").hasRole("ADMIN")
+                        .requestMatchers("/api/arrematantes").authenticated()
 
                         .anyRequest().authenticated()
                 )

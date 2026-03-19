@@ -28,4 +28,13 @@ public class LeilaoEntity {
 
     @Column(name = "image_url", length = 1000)
     private String imageUrl;
+
+    private String comitenteNome;
+    private String comitenteDocumento;
+    private String edital;
+    private String processoAdministrativo;
+    private String leiloeiroNome;
+    private String leiloeiroMatricula;
+    private String leiloeiroDocumento;
+    private String cidadeUfPagamento;
 }
