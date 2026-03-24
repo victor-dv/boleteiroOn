@@ -41,5 +41,14 @@ public class LoteController {
         return ResponseEntity.ok(ApiResponse.success(responseDtoList,
                 lotesImportados.size() + " lotes importados com sucesso."));
     }
+    @GetMapping("/leilao/{leilaoId}")
+    public ResponseEntity<ApiResponse<List<LoteResponseDto>>> listAll(@PathVariable Long leilaoId) {
+        var lotes = loteService.getAll(leilaoId);
+        var responseDtoList = lotes.stream()
+                .map(LoteResponseDto::new)
+                .toList();
+
+        return ResponseEntity.ok(ApiResponse.success(responseDtoList, "Lotes do leilão obtidos com sucesso"));
+    }
 
 }

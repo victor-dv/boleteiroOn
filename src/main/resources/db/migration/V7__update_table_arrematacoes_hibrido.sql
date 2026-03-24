@@ -1,0 +1,2 @@
+ALTER TABLE arrematacoes ALTER COLUMN arrematante_id DROP NOT NULL;
+ALTER TABLE arrematacoes ADD COLUMN venda_online BOOLEAN NOT NULL DEFAULT FALSE;

@@ -1,0 +1,1 @@
+ALTER TABLE arrematacoes ADD COLUMN url_foto_assinatura VARCHAR(1000);

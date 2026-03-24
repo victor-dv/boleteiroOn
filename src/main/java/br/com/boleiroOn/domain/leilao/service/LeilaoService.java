@@ -1,12 +1,15 @@
 package br.com.boleiroOn.domain.leilao.service;
 
 import br.com.boleiroOn.domain.leilao.dto.LeilaoRequestDto;
+import br.com.boleiroOn.domain.leilao.dto.LeilaoResponseDto;
 import br.com.boleiroOn.domain.leilao.entity.LeilaoEntity;
 import br.com.boleiroOn.domain.leilao.repository.LeilaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,10 @@ public class LeilaoService {
         leilao.setCidadeUfPagamento(data.cidadeUfPagamento());
 
         return leilaoRepository.save(leilao);
+    }
+
+    public List<LeilaoEntity> getAll() {
+        return leilaoRepository.findAll();
     }
 
 }

@@ -81,4 +81,8 @@ public class LoteService {
         }
     }
 
+    public List<LoteEntity> getAll(Long leilaoId) {
+        return loteRepository.findAll();
+    }
+
 }
