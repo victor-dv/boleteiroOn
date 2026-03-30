@@ -17,7 +17,6 @@ public class LeilaoService {
 
     private final LeilaoRepository leilaoRepository;
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public LeilaoEntity create(LeilaoRequestDto data) {
         LeilaoEntity leilao = new LeilaoEntity();
         leilao.setNome(data.nome());

@@ -36,10 +36,11 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/upload").hasRole("ADMIN")
-                        .requestMatchers("/api/leiloes/**").hasRole("ADMIN")
-                        .requestMatchers("/api/lotes/**").hasRole("ADMIN")
+                        .requestMatchers("/api/users/login").permitAll()
+                        .requestMatchers("/api/users/**").authenticated()
+                        .requestMatchers("/api/upload").authenticated()
+                        .requestMatchers("/api/leiloes/**").authenticated()
+                        .requestMatchers("/api/lotes/**").authenticated()
                         .requestMatchers("/api/arrematantes/**").authenticated()
                         .requestMatchers("/api/arrematacao/**").authenticated()
                         .requestMatchers("/api/consulta/**").authenticated()

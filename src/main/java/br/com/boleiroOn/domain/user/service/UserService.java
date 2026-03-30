@@ -4,6 +4,7 @@ import br.com.boleiroOn.config.infra.configs.JwtToken;
 import br.com.boleiroOn.domain.user.dto.LoginRequestDto;
 import br.com.boleiroOn.domain.user.dto.LoginResponseDto;
 import br.com.boleiroOn.domain.user.dto.UserRegisterDto;
+import br.com.boleiroOn.domain.user.dto.UserUpdateDto;
 import br.com.boleiroOn.domain.user.entity.UserEntity;
 import br.com.boleiroOn.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +56,57 @@ public class UserService {
 
         String token = jwtToken.generateToken(user.getLogin(), user.getId(), user.getRole().name());
         return new LoginResponseDto(token, user.getName(), user.getEmail());
+    }
+
+    public UserEntity getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+    }
+    public List<UserEntity> getAll(){
+        return userRepository.findAll();
+    }
+
+    public UserEntity update(Long id, UserUpdateDto data){
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+
+        user.setName(data.name() != null ? data.name() : user.getName());
+        if (data.login() != null && !data.login().isBlank() && !data.login().equals(user.getLogin())) {
+            if (userRepository.existsByLogin(data.login())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Este login já está em uso. Escolha outro.");
+            }
+            user.setLogin(data.login());
+        }
+        user.setRole(data.role() != null ? data.role() : user.getRole());
+
+        if(data.password() != null && !data.password().isBlank()){
+
+            if (data.oldPassword() == null || data.oldPassword().isBlank()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha antiga é obrigatória para alterar a senha.");
+            }
+            if (!passwordEncoder.matches(data.oldPassword(), user.getPassword())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha antiga está incorreta.");
+            }
+            user.setPassword(passwordEncoder.encode(data.password()));
+        }
+        return userRepository.save(user);
+    }
+
+    public UserEntity falsoDelete(Long id){
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        user.setStatus(false);
+        return userRepository.save(user);
+    }
+    public List<UserEntity> getByStatus(boolean status){
+        return userRepository.findByStatus(status);
+    }
+
+    public UserEntity delete(Long id) {
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        userRepository.delete(user);
+        return user;
     }
 
 
