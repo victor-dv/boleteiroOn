@@ -17,7 +17,6 @@ public record ArrematanteRequestDto(
 
         String celular,
 
-        String endereco,
 
         @NotBlank
         @Email
@@ -30,6 +29,7 @@ public record ArrematanteRequestDto(
         String rg,
         String cep,
         String cidade,
+        String endereco,
         String uf
 ) {
 }

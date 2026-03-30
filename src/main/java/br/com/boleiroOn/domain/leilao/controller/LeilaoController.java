@@ -36,4 +36,17 @@ public class LeilaoController {
     public ResponseEntity<ApiResponse<List<LeilaoDetalhadoResponseDto>>> getAll() {
         List<LeilaoDetalhadoResponseDto> leiloes = leilaoService.getAll().stream().map(LeilaoDetalhadoResponseDto::new).toList();
         return ResponseEntity.ok(ApiResponse.success(leiloes, "Leilões obtidos com sucesso"));}
+
+    @GetMapping("/{status}")
+    public ResponseEntity<ApiResponse<List<LeilaoDetalhadoResponseDto>>> getByStatus(@PathVariable boolean status) {
+        List<LeilaoDetalhadoResponseDto> leiloes = leilaoService.getByStatus(status).stream().map(LeilaoDetalhadoResponseDto::new).toList();
+        return ResponseEntity.ok(ApiResponse.success(leiloes, "Leilões obtidos com sucesso"));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<LeilaoResponseDto>> update(@PathVariable Long id) {
+        var leilaoAtualizado = leilaoService.falseDelete(id);
+        var responseDto = new LeilaoResponseDto(leilaoAtualizado);
+        return ResponseEntity.ok(ApiResponse.success(responseDto, "Leilão atualizado com sucesso"));
+    }
 }

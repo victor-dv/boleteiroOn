@@ -50,5 +50,20 @@ public class LoteController {
 
         return ResponseEntity.ok(ApiResponse.success(responseDtoList, "Lotes do leilão obtidos com sucesso"));
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<LoteResponseDto>> delete(@PathVariable Long id) {
+        var lote = loteService.delete(id);
+        var responseDto = new LoteResponseDto(lote);
+
+        return ResponseEntity.ok(ApiResponse.success(responseDto, "Lote deletado com sucesso"));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<LoteResponseDto>> update(@PathVariable Long id, @RequestBody @Valid LoteRequestDto data) {
+        var lote = loteService.update(id, data);
+        var responseDto = new LoteResponseDto(lote);
+
+        return ResponseEntity.ok(ApiResponse.success(responseDto, "Lote atualizado com sucesso"));
+    }
 
 }

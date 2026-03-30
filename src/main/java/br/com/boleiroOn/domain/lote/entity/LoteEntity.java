@@ -16,7 +16,7 @@ public class LoteEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "leilao_id", nullable = false)
     private LeilaoEntity leilao;
 
     private Integer numeroLote;

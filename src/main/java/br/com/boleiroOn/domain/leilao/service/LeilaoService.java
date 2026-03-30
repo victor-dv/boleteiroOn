@@ -40,4 +40,15 @@ public class LeilaoService {
         return leilaoRepository.findAll();
     }
 
+    public LeilaoEntity falseDelete(Long id) {
+        var leilao = leilaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Leilão não encontrado."));
+        leilao.setStatus(false);
+        return leilaoRepository.save(leilao);
+    }
+
+    public List<LeilaoEntity> getByStatus(boolean status) {
+        return leilaoRepository.findByStatus(status);
+    }
+
 }

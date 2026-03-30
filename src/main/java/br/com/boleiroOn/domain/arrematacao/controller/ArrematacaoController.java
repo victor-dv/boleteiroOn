@@ -1,9 +1,6 @@
 package br.com.boleiroOn.domain.arrematacao.controller;
 
-import br.com.boleiroOn.domain.arrematacao.dto.ArrematacaoRequestDto;
-import br.com.boleiroOn.domain.arrematacao.dto.ArrematacaoResponseDto;
-import br.com.boleiroOn.domain.arrematacao.dto.AssinaturaArrematacaoRequestDto;
-import br.com.boleiroOn.domain.arrematacao.dto.AutoArrematacaoResponseDto;
+import br.com.boleiroOn.domain.arrematacao.dto.*;
 import br.com.boleiroOn.domain.arrematacao.service.ArrematacaoService;
 import br.com.boleiroOn.shared.dto.ApiResponse;
 import jakarta.validation.Valid;
@@ -11,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/arrematacao")
@@ -38,6 +37,12 @@ public class ArrematacaoController {
     public ResponseEntity<ApiResponse<Void>>assinar(@PathVariable Long id, @RequestBody @Valid AssinaturaArrematacaoRequestDto data) {
         arrematacaoService.assinarAutoArrematacao(id, data);
         return ResponseEntity.ok(ApiResponse.success(null, "Arrematação assinada com sucesso."));
+    }
+
+    @GetMapping("/feed/{leilaoId}")
+    public ResponseEntity<ApiResponse<List<ArrematacaoFeedDto>>> buscarFeed(@PathVariable Long leilaoId) {
+        List<ArrematacaoFeedDto> feed = arrematacaoService.buscarFeedArrematacoes(leilaoId);
+        return ResponseEntity.ok(ApiResponse.success(feed, "Feed de arrematações atualizado."));
     }
 
 

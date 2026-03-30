@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -82,7 +83,32 @@ public class LoteService {
     }
 
     public List<LoteEntity> getAll(Long leilaoId) {
-        return loteRepository.findAll();
+        var leilao = leilaoRepository.findById(leilaoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Leilão não encontrado."));
+        return loteRepository.findByLeilaoId(leilaoId);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    public LoteEntity delete(Long loteId) {
+        var lote = loteRepository.findById(loteId).orElseThrow(() -> new ResourceNotFoundException("Lote não encontrado."));
+        loteRepository.delete(lote);
+        return lote;
+    }
+
+    public LoteEntity update(Long loteId, LoteRequestDto data) {
+        var lote = loteRepository.findById(loteId).orElseThrow(() -> new ResourceNotFoundException("Lote não encontrado."));
+
+        if (data.numeroLote() != null && data.numeroLote() != lote.getNumeroLote()) {
+            if (loteRepository.existsByLeilaoIdAndNumeroLote(lote.getLeilao().getId(), data.numeroLote())) {
+                throw new BusinessException("Já existe um lote com este número neste leilão.");
+            }
+            lote.setNumeroLote(data.numeroLote());
+        }
+
+        if (data.descricao() != null) {
+            lote.setDescricao(data.descricao());
+        }
+
+        return loteRepository.save(lote);
     }
 
 }

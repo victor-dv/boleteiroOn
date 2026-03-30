@@ -1,5 +1,6 @@
 package br.com.boleiroOn.domain.arrematacao.service;
 
+import br.com.boleiroOn.domain.arrematacao.dto.ArrematacaoFeedDto;
 import br.com.boleiroOn.domain.arrematacao.dto.ArrematacaoRequestDto;
 import br.com.boleiroOn.domain.arrematacao.dto.AssinaturaArrematacaoRequestDto;
 import br.com.boleiroOn.domain.arrematacao.dto.AutoArrematacaoResponseDto;
@@ -14,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ArrematacaoService {
@@ -23,8 +26,8 @@ public class ArrematacaoService {
 
     @Transactional
     public ArrematacaoEntity create(ArrematacaoRequestDto data) {
-        var lote = loteRepository.findById(data.loteId())
-                .orElseThrow(() -> new ResourceNotFoundException("Lote não encontrado."));
+        var lote = loteRepository.findByLeilaoIdAndNumeroLote(data.leilaoId(), data.numeroLote())
+                .orElseThrow(() -> new ResourceNotFoundException("Lote não encontrado para o leilão e número de lote informados."));
 
         if (arrematacaoRepository.existsByLoteIdAndStatusNot(lote.getId(), StatusArrematacao.CANCELADO)) {
             throw new BusinessException("Este lote já possui uma arrematação ativa.");
@@ -76,5 +79,9 @@ public class ArrematacaoService {
         arrematacao.setUrlFotoAssinatura(data.urlFotoAssinatura());
 
         arrematacaoRepository.save(arrematacao);
+    }
+
+    public List<ArrematacaoFeedDto> buscarFeedArrematacoes(Long leilaoId) {
+        return arrematacaoRepository.buscarUltimasArrematacoesDoLeilao(leilaoId);
     }
 }
