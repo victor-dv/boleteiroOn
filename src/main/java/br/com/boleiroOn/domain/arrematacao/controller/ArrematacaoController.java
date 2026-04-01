@@ -38,6 +38,11 @@ public class ArrematacaoController {
         arrematacaoService.assinarAutoArrematacao(id, data);
         return ResponseEntity.ok(ApiResponse.success(null, "Arrematação assinada com sucesso."));
     }
+    @PatchMapping("/{id}/valor")
+    public ResponseEntity<ApiResponse<Void>>editarValor(@PathVariable Long id, @RequestBody @Valid ArrematacaoRequestEditValDto data) {
+        arrematacaoService.editarValorArrematacao(id, data);
+        return ResponseEntity.ok(ApiResponse.success(null, "Valor da arrematação atualizado com sucesso."));
+    }
 
     @GetMapping("/feed/{leilaoId}")
     public ResponseEntity<ApiResponse<List<ArrematacaoFeedDto>>> buscarFeed(@PathVariable Long leilaoId) {
@@ -51,5 +56,10 @@ public class ArrematacaoController {
         return ResponseEntity.ok(ApiResponse.success(feed, "Feed de arrematações com autos nulos atualizado."));
     }
 
+    @GetMapping("feed/autos-assinados/{leilaoId}")
+    public ResponseEntity<ApiResponse<List<ArrematacaoFeedDto>>> buscarFeedAutosAssinados(@PathVariable Long leilaoId) {
+        List<ArrematacaoFeedDto> feed = arrematacaoService.buscatrAutoAssinada(leilaoId);
+        return ResponseEntity.ok(ApiResponse.success(feed, "Feed de arrematações com autos assinados atualizado."));
+    }
 
 }

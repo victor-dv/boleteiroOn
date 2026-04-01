@@ -1,9 +1,6 @@
 package br.com.boleiroOn.domain.arrematacao.service;
 
-import br.com.boleiroOn.domain.arrematacao.dto.ArrematacaoFeedDto;
-import br.com.boleiroOn.domain.arrematacao.dto.ArrematacaoRequestDto;
-import br.com.boleiroOn.domain.arrematacao.dto.AssinaturaArrematacaoRequestDto;
-import br.com.boleiroOn.domain.arrematacao.dto.AutoArrematacaoResponseDto;
+import br.com.boleiroOn.domain.arrematacao.dto.*;
 import br.com.boleiroOn.domain.arrematacao.entity.ArrematacaoEntity;
 import br.com.boleiroOn.domain.arrematacao.enums.StatusPagamentoArrematacao;
 import br.com.boleiroOn.domain.arrematacao.repository.ArrematacaoRepository;
@@ -15,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -91,5 +89,25 @@ public class ArrematacaoService {
                 .filter(a -> a.urlFotoAssinatura() == null && !a.vendaOnline())
                 .toList();
     }
+
+    public List<ArrematacaoFeedDto> buscatrAutoAssinada(Long leilaoId) {
+        var arrematacoes = arrematacaoRepository.buscarUltimasArrematacoesDoLeilao(leilaoId);
+        return arrematacoes.stream()
+                .filter(a -> a.urlFotoAssinatura() != null && !a.vendaOnline())
+                .toList();
+    }
+
+    public ArrematacaoEntity editarValorArrematacao(Long arrematacaoId, ArrematacaoRequestEditValDto data) {
+        var arrematacao = arrematacaoRepository.findById(arrematacaoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Arrematação não encontrada."));
+        arrematacao.setValorArrematacao(data.valorArrematacao());
+
+        if (arrematacao.getValorArrematacao().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BusinessException("O valor da arrematação deve ser positivo.");
+        }
+
+        return arrematacaoRepository.save(arrematacao);
+    }
+
 
 }

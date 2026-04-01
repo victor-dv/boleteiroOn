@@ -37,14 +37,6 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/users/login").permitAll()
-                        .requestMatchers("/api/users/**").authenticated()
-                        .requestMatchers("/api/upload").authenticated()
-                        .requestMatchers("/api/leiloes/**").authenticated()
-                        .requestMatchers("/api/lotes/**").authenticated()
-                        .requestMatchers("/api/arrematantes/**").authenticated()
-                        .requestMatchers("/api/arrematacao/**").authenticated()
-                        .requestMatchers("/api/consulta/**").authenticated()
-
 
                         .anyRequest().authenticated()
                 )
