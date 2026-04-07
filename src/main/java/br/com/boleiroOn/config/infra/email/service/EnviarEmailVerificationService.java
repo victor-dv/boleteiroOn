@@ -1,8 +1,8 @@
 package br.com.boleiroOn.config.infra.email.service;
 
 import br.com.boleiroOn.config.infra.email.entity.EmailEntity;
-import br.com.boleiroOn.config.infra.email.entity.VerificationToken;
-import br.com.boleiroOn.config.infra.email.repository.VerificationTokenRepository;
+import br.com.boleiroOn.config.infra.email.entity.VerificationEmailToken;
+import br.com.boleiroOn.config.infra.email.repository.VerificationEmailTokenRepository;
 import br.com.boleiroOn.domain.arrematante.entity.ArrematanteEntity;
 import br.com.boleiroOn.domain.arrematante.repository.ArrematanteRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class EnviarEmailVerificationService {
 
     private final EmailService emailService;
-    private final VerificationTokenRepository verificationTokenRepository;
+    private final VerificationEmailTokenRepository verificationTokenRepository;
     private final ArrematanteRepository arrematanteRepository;
 
     @Value("${app.email.verification}")
@@ -35,7 +35,7 @@ public class EnviarEmailVerificationService {
     }
 
     public void validarEmail(String token) {
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token)
+        VerificationEmailToken verificationToken = verificationTokenRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Token de validação inválido."));
 
         if (verificationToken.estaExpirado()){

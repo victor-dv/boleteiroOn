@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "tokens_validacao_arrematante")
 @Data
 @NoArgsConstructor
-public class VerificationToken {
+public class VerificationEmailToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,7 +23,7 @@ public class VerificationToken {
     private ArrematanteEntity arrematante;
     private LocalDateTime dataExpiracao;
 
-    public VerificationToken(String token, ArrematanteEntity arrematante, LocalDateTime dataExpiracao) {
+    public VerificationEmailToken(String token, ArrematanteEntity arrematante, LocalDateTime dataExpiracao) {
         this.token = token;
         this.arrematante = arrematante;
         this.dataExpiracao = LocalDateTime.now().plusHours(1);

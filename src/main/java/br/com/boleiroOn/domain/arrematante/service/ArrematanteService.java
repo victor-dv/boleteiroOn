@@ -1,8 +1,8 @@
 package br.com.boleiroOn.domain.arrematante.service;
 
-import br.com.boleiroOn.config.infra.email.repository.VerificationTokenRepository;
-import br.com.boleiroOn.config.infra.email.service.EmailService;
-import br.com.boleiroOn.config.infra.email.entity.VerificationToken;
+import br.com.boleiroOn.config.infra.email.entity.VerificationEmailToken;
+import br.com.boleiroOn.config.infra.email.repository.VerificationEmailTokenRepository;
+
 import br.com.boleiroOn.config.infra.email.service.EnviarEmailVerificationService;
 import br.com.boleiroOn.domain.arrematacao.repository.ArrematacaoRepository;
 import br.com.boleiroOn.domain.arrematante.dto.ArrematanteRequestDto;
@@ -26,7 +26,7 @@ public class ArrematanteService {
     private final ArrematanteRepository arrematanteRepository;
     private final LeilaoRepository leilaoRepository;
     private final ArrematacaoRepository arrematacaoRepository;
-    private final VerificationTokenRepository verificationTokenRepository;
+    private final VerificationEmailTokenRepository verificationTokenRepository;
     private final EnviarEmailVerificationService enviarEmailVerificationService;
 
     @Transactional
@@ -58,7 +58,7 @@ public class ArrematanteService {
         arrematante = arrematanteRepository.save(arrematante);
 
         String tokenUUID = UUID.randomUUID().toString();
-        VerificationToken verificationToken1 = new VerificationToken(tokenUUID, arrematante, null);
+        VerificationEmailToken verificationToken1 = new VerificationEmailToken(tokenUUID, arrematante, null);
         verificationTokenRepository.save(verificationToken1);
         enviarEmailVerificationService.enviarEmailDeValidacao(arrematante, tokenUUID);
         return arrematante;

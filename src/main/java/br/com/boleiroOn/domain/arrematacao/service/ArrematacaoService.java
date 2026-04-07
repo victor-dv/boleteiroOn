@@ -1,6 +1,7 @@
 package br.com.boleiroOn.domain.arrematacao.service;
 
 import br.com.boleiroOn.config.infra.aws.AWSService;
+import br.com.boleiroOn.config.infra.email.service.EnviarEmailAutoService;
 import br.com.boleiroOn.domain.arrematacao.dto.*;
 import br.com.boleiroOn.domain.arrematacao.entity.ArrematacaoEntity;
 import br.com.boleiroOn.domain.arrematacao.enums.StatusPagamentoArrematacao;
@@ -25,6 +26,7 @@ public class ArrematacaoService {
     private final ArrematanteRepository arrematanteRepository;
     private final PdfGeradorService pdfGeradorService;
     private final AWSService s3StorageService;
+    private final EnviarEmailAutoService enviarEmailAutoService;
 
     @Transactional
     public ArrematacaoEntity create(ArrematacaoRequestDto data) {
@@ -108,6 +110,7 @@ public class ArrematacaoService {
 
             // 7. Salvar no banco
             arrematacaoRepository.save(arrematacao);
+            enviarEmailAutoService.enviarEmailComLinkPdf(arrematacao, keyPdfS3);
 
         } catch (Exception e) {
             // Como a geração de PDF e o upload para o S3 podem lançar exceções (IOException, etc),
