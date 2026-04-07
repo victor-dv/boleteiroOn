@@ -1,7 +1,7 @@
 package br.com.boleiroOn.domain.arrematacao.dto;
 
 import br.com.boleiroOn.domain.arrematacao.entity.ArrematacaoEntity;
-import br.com.boleiroOn.domain.arrematacao.enums.StatusArrematacao;
+import br.com.boleiroOn.domain.arrematacao.enums.StatusPagamentoArrematacao;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,9 +14,10 @@ public record ArrematacaoResponseDto(
         String nomeArrematante,
         Integer placaArrematante,
         boolean vendaOnline,
+        boolean vendaCondicional,
         BigDecimal valorArrematacao,
         BigDecimal valorComissao,
-        StatusArrematacao status,
+        StatusPagamentoArrematacao status,
         LocalDateTime dataArrematacao
 ) {
     public ArrematacaoResponseDto(ArrematacaoEntity entity) {
@@ -30,6 +31,7 @@ public record ArrematacaoResponseDto(
                 entity.isVendaOnline() ? null : entity.getArrematante().getPlaca(),
 
                 entity.isVendaOnline(),
+                entity.isVendaCondicional(),
                 entity.getValorArrematacao(),
                 entity.getValorComissao(),
                 entity.getStatus(),

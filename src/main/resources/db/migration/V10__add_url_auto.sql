@@ -1,0 +1,1 @@
+ALTER TABLE arrematacoes ADD COLUMN url_auto_pdf VARCHAR(1000);

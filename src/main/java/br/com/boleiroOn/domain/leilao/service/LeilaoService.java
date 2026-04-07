@@ -17,7 +17,6 @@ public class LeilaoService {
 
     private final LeilaoRepository leilaoRepository;
     @Transactional
-    @PreAuthorize("hasRole('ADMIN')")
     public LeilaoEntity create(LeilaoRequestDto data) {
         LeilaoEntity leilao = new LeilaoEntity();
         leilao.setNome(data.nome());
@@ -44,6 +43,13 @@ public class LeilaoService {
         var leilao = leilaoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Leilão não encontrado."));
         leilao.setStatus(false);
+        return leilaoRepository.save(leilao);
+    }
+
+    public LeilaoEntity voltaLeilao(Long id) {
+        var leilao = leilaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Leilão não encontrado."));
+        leilao.setStatus(true);
         return leilaoRepository.save(leilao);
     }
 

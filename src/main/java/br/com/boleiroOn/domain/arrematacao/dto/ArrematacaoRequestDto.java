@@ -16,6 +16,8 @@ public record ArrematacaoRequestDto (
         @NotNull
         Boolean vendaOnline,
         @NotNull
+        Boolean vendaCondicional,
+        @NotNull
         @Positive
         BigDecimal valorArrematacao
 ){

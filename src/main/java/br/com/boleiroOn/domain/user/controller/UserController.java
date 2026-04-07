@@ -1,19 +1,15 @@
 package br.com.boleiroOn.domain.user.controller;
 
-import br.com.boleiroOn.domain.user.dto.LoginRequestDto;
-import br.com.boleiroOn.domain.user.dto.LoginResponseDto;
-import br.com.boleiroOn.domain.user.dto.UserRegisterDto;
-import br.com.boleiroOn.domain.user.dto.UserResponseDto;
+import br.com.boleiroOn.domain.user.dto.*;
 import br.com.boleiroOn.domain.user.service.UserService;
 import br.com.boleiroOn.shared.dto.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/users")
@@ -32,7 +28,30 @@ public class UserController {
         LoginResponseDto response = userService.login(request);
         return ResponseEntity.ok(ApiResponse.success(response, "Login realizado com sucesso"));
     }
-
-
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserResponseDto>> getById(@PathVariable Long id) {
+        var user = userService.getUserById(id);
+        return ResponseEntity.ok(ApiResponse.success(UserResponseDto.from(user), "Usuário obtido com sucesso"));
+    }
+    @GetMapping("/")
+    public ResponseEntity<ApiResponse<Iterable<UserResponseDto>>> getAll() {
+        List<UserResponseDto> users = userService.getAll().stream().map(UserResponseDto::from).toList();
+        return ResponseEntity.ok(ApiResponse.success(users, "Usuários obtidos com sucesso"));
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserResponseDto>> update(@PathVariable Long id, @RequestBody @Valid UserUpdateDto dto) {
+        var user = userService.update(id, dto);
+        return ResponseEntity.ok(ApiResponse.success(UserResponseDto.from(user), "Usuário atualizado com sucesso"));
+    }
+    @PatchMapping("/{id}/desativar")
+    public ResponseEntity<ApiResponse<UserResponseDto>> deactivate(@PathVariable Long id) {
+        var user = userService.falsoDelete(id);
+        return ResponseEntity.ok(ApiResponse.success(UserResponseDto.from(user), "Usuário desativado com sucesso"));
+    }
+    @GetMapping("/status/{status}")
+    public ResponseEntity<ApiResponse<Iterable<UserResponseDto>>> getByStatus(@PathVariable boolean status) {
+        List<UserResponseDto> users = userService.getByStatus(status).stream().map(UserResponseDto::from).toList();
+        return ResponseEntity.ok(ApiResponse.success(users, "Usuários obtidos com sucesso"));
+    }
 
 }

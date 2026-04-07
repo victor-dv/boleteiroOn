@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Auto de Arrematação</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; color: #333; line-height: 1.5; }
+        .cabecalho { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
+        .secao { margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; }
+        h3 { margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #444; font-size: 16px; }
+
+        /* Sistema de grid simples para dados do arrematante */
+        .info-grid { display: table; width: 100%; }
+        .info-row { display: table-row; }
+        .info-cell { display: table-cell; padding: 5px 0; width: 50%; }
+
+        /* Container de Assinatura */
+        .assinatura-box { text-align: center; margin-top: 60px; page-break-inside: avoid; }
+        .assinatura-img { max-width: 250px; max-height: 120px; display: block; margin: 0 auto; }
+        .linha-assinatura { border-top: 1px solid #000; width: 350px; margin: 0 auto; padding-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="cabecalho">
+    <h2>AUTO DE ARREMATAÇÃO</h2>
+    <p><strong>Leilão:</strong> <span th:text="${nomeLeilao}">Nome do Leilão</span></p>
+    <p>Data da Arrematação: <span th:text="${dataArrematacao}">01/01/2026</span></p>
+</div>
+
+<div class="secao">
+    <h3>Dados da Arrematação</h3>
+    <p><strong>Lote:</strong> <span th:text="${numeroLote}">001</span></p>
+    <p><strong>Condicional:</strong> <span th:text="${condicional}">Não</span></p>
+    <p><strong>Valor da Arrematação:</strong> <span th:text="${valorArremate}">R$ 0,00</span></p>
+    <p><strong>Comissão do Leiloeiro (5%):</strong> <span th:text="${valorComissao}">R$ 0,00</span></p>
+</div>
+
+<div class="secao">
+    <h3>Dados do Arrematante</h3>
+    <div class="info-grid">
+        <div class="info-row">
+            <div class="info-cell"><strong>Nome:</strong> <span th:text="${nomeArrematante}">Fulano</span></div>
+            <div class="info-cell"><strong>Placa:</strong> <span th:text="${placa}">ABC-1234</span></div>
+        </div>
+        <div class="info-row">
+            <div class="info-cell"><strong>Telefone:</strong> <span th:text="${telefone}">(00) 0000-0000</span></div>
+            <div class="info-cell"><strong>Celular:</strong> <span th:text="${celular}">(00) 90000-0000</span></div>
+        </div>
+        <div class="info-row">
+            <div class="info-cell" style="width: 100%;"><strong>E-mail:</strong> <span th:text="${email}">email@exemplo.com</span></div>
+        </div>
+        <div class="info-row">
+            <div class="info-cell" style="width: 100%;"><strong>Endereço:</strong> <span th:text="${endereco}">Rua Exemplo, 123</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="assinatura-box">
+    <img class="assinatura-img" th:if="${assinaturaBase64 != null}" th:src="${assinaturaBase64}" alt="Assinatura" />
+    <div th:unless="${assinaturaBase64 != null}" style="height: 100px;"></div>
+
+    <div class="linha-assinatura">
+        <p style="margin: 0; font-weight: bold;" th:text="${nomeArrematante}">Fulano de Tal</p>
+        <p style="margin: 0; font-size: 12px; color: #666;">Assinatura do Arrematante</p>
+    </div>
+</div>
+
+</body>
+</html>

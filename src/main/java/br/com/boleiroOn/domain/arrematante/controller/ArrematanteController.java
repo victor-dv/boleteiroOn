@@ -1,5 +1,6 @@
 package br.com.boleiroOn.domain.arrematante.controller;
 
+import br.com.boleiroOn.config.infra.email.service.EnviarEmailVerificationService;
 import br.com.boleiroOn.domain.arrematante.dto.ArrematanteDetalhadoResponseDto;
 import br.com.boleiroOn.domain.arrematante.dto.ArrematanteRequestDto;
 import br.com.boleiroOn.domain.arrematante.dto.ArrematanteResponseDto;
@@ -17,7 +18,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ArrematanteController {
 
     private final ArrematanteService arrematanteService;
-
     @PostMapping
     public ResponseEntity<ApiResponse<ArrematanteResponseDto>> create(@RequestBody @Valid ArrematanteRequestDto data, UriComponentsBuilder uriBuilder) {
 

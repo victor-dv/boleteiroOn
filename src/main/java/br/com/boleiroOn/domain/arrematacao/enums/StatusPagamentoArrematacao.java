@@ -1,6 +1,6 @@
 package br.com.boleiroOn.domain.arrematacao.enums;
 
-public enum StatusArrematacao {
+public enum StatusPagamentoArrematacao {
     PENDENTE_PAGAMENTO,
     PAGO,
     CANCELADO

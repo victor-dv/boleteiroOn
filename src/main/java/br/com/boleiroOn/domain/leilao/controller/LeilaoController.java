@@ -44,8 +44,14 @@ public class LeilaoController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<LeilaoResponseDto>> update(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<LeilaoResponseDto>> arquivarLeilao(@PathVariable Long id) {
         var leilaoAtualizado = leilaoService.falseDelete(id);
+        var responseDto = new LeilaoResponseDto(leilaoAtualizado);
+        return ResponseEntity.ok(ApiResponse.success(responseDto, "Leilão atualizado com sucesso"));
+    }
+    @PatchMapping("/{id}/voltar")
+    public ResponseEntity<ApiResponse<LeilaoResponseDto>> voltarLeilao(@PathVariable Long id) {
+        var leilaoAtualizado = leilaoService.voltaLeilao(id);
         var responseDto = new LeilaoResponseDto(leilaoAtualizado);
         return ResponseEntity.ok(ApiResponse.success(responseDto, "Leilão atualizado com sucesso"));
     }

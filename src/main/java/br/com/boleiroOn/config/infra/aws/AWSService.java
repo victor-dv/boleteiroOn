@@ -49,4 +49,29 @@ public class AWSService {
             throw new BusinessException("Erro ao enviar imagem para o S3: " + e.getMessage());
         }
     }
+
+    public String uploadFile(byte[] bytes, String fileName, String contentType) {
+        if (bytes == null || bytes.length == 0) {
+            throw new BusinessException("O conteúdo do arquivo não pode estar vazio.");
+        }
+        return executeUpload(bytes, fileName, contentType);
+    }
+
+    private String executeUpload(byte[] bytes, String fileName, String contentType) {
+        try {
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fileName)
+                    .contentType(contentType)
+                    .build();
+
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(bytes));
+
+            // Retorna a URL completa como o seu sistema já espera
+            return "https://" + bucketName + ".s3." + region + ".amazonaws.com/" + fileName;
+
+        } catch (Exception e) {
+            throw new BusinessException("Erro ao enviar arquivo para o S3: " + e.getMessage());
+        }
+    }
 }

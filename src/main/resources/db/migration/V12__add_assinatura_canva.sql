@@ -1,0 +1,1 @@
+ALTER TABLE arrematacoes ADD COLUMN assinatura_base64 VARCHAR(1000);

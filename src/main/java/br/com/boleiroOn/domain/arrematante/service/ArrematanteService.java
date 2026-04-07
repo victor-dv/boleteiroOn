@@ -1,5 +1,9 @@
 package br.com.boleiroOn.domain.arrematante.service;
 
+import br.com.boleiroOn.config.infra.email.repository.VerificationTokenRepository;
+import br.com.boleiroOn.config.infra.email.service.EmailService;
+import br.com.boleiroOn.config.infra.email.entity.VerificationToken;
+import br.com.boleiroOn.config.infra.email.service.EnviarEmailVerificationService;
 import br.com.boleiroOn.domain.arrematacao.repository.ArrematacaoRepository;
 import br.com.boleiroOn.domain.arrematante.dto.ArrematanteRequestDto;
 import br.com.boleiroOn.domain.arrematante.entity.ArrematanteEntity;
@@ -8,12 +12,12 @@ import br.com.boleiroOn.domain.leilao.repository.LeilaoRepository;
 import br.com.boleiroOn.shared.exception.BusinessException;
 import br.com.boleiroOn.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.LifecycleState;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,8 @@ public class ArrematanteService {
     private final ArrematanteRepository arrematanteRepository;
     private final LeilaoRepository leilaoRepository;
     private final ArrematacaoRepository arrematacaoRepository;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final EnviarEmailVerificationService enviarEmailVerificationService;
 
     @Transactional
     public ArrematanteEntity create(ArrematanteRequestDto data) {
@@ -41,6 +47,7 @@ public class ArrematanteService {
         arrematante.setCelular(data.celular());
         arrematante.setEndereco(data.endereco());
         arrematante.setUrlFotoDocumento(data.urlFotoDocumento());
+        arrematante.setEmailValidado(false);
 
         arrematante.setDocumento(data.documento());
         arrematante.setRg(data.rg());
@@ -48,7 +55,14 @@ public class ArrematanteService {
         arrematante.setCidade(data.cidade());
         arrematante.setUf(data.uf());
 
-        return arrematanteRepository.save(arrematante);
+        arrematante = arrematanteRepository.save(arrematante);
+
+        String tokenUUID = UUID.randomUUID().toString();
+        VerificationToken verificationToken1 = new VerificationToken(tokenUUID, arrematante, null);
+        verificationTokenRepository.save(verificationToken1);
+        enviarEmailVerificationService.enviarEmailDeValidacao(arrematante, tokenUUID);
+        return arrematante;
+
     }
 
     public List<ArrematanteEntity> getAllByLeilaoId(Long leilaoId) {

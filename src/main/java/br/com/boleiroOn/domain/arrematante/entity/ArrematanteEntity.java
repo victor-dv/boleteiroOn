@@ -44,4 +44,7 @@
         private String cep;
         private String cidade;
         private String uf;
+
+        @Column(name = "email_validado", nullable = false)
+        private boolean emailValidado = false;
     }

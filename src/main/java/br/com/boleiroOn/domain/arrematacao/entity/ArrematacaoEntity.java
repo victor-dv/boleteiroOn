@@ -1,6 +1,6 @@
 package br.com.boleiroOn.domain.arrematacao.entity;
 
-import br.com.boleiroOn.domain.arrematacao.enums.StatusArrematacao;
+import br.com.boleiroOn.domain.arrematacao.enums.StatusPagamentoArrematacao;
 import br.com.boleiroOn.domain.arrematante.entity.ArrematanteEntity;
 import br.com.boleiroOn.domain.lote.entity.LoteEntity;
 import jakarta.persistence.*;
@@ -29,6 +29,9 @@ public class ArrematacaoEntity {
     @Column(name = "venda_online", nullable = false)
     private boolean vendaOnline = false;
 
+    @Column(name = "venda_condicional", nullable = false)
+    private boolean vendaCondicional = false;
+
     @Column(name = "valor_arrematacao", nullable = false)
     private BigDecimal valorArrematacao;
 
@@ -37,13 +40,19 @@ public class ArrematacaoEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatusArrematacao status = StatusArrematacao.PENDENTE_PAGAMENTO;
+    private StatusPagamentoArrematacao status = StatusPagamentoArrematacao.PENDENTE_PAGAMENTO;
 
     @Column(name = "data_arrematacao", nullable = false)
     private LocalDateTime dataArrematacao = LocalDateTime.now();
 
     @Column(name = "url_foto_assinatura")
     private String urlFotoAssinatura;
+
+    @Column (name = "assinatura_base64", length = 100000)
+    private String assinaturaBase64;
+
+    @Column(name = "url_auto_pdf")
+    private String urlAutoPdf;
 
     @PrePersist
     @PreUpdate

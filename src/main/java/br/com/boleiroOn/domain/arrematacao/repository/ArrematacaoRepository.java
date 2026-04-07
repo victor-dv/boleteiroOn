@@ -2,14 +2,14 @@ package br.com.boleiroOn.domain.arrematacao.repository;
 
 import br.com.boleiroOn.domain.arrematacao.dto.ArrematacaoFeedDto;
 import br.com.boleiroOn.domain.arrematacao.entity.ArrematacaoEntity;
-import br.com.boleiroOn.domain.arrematacao.enums.StatusArrematacao;
+import br.com.boleiroOn.domain.arrematacao.enums.StatusPagamentoArrematacao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface ArrematacaoRepository extends JpaRepository<ArrematacaoEntity, Long> {
-    boolean existsByLoteIdAndStatusNot(Long loteId, StatusArrematacao status);
+    boolean existsByLoteIdAndStatusNot(Long loteId, StatusPagamentoArrematacao status);
 
 
     @Query("""
@@ -17,10 +17,13 @@ public interface ArrematacaoRepository extends JpaRepository<ArrematacaoEntity, 
         a.id, 
         l.numeroLote, 
         l.descricao, 
+        a.vendaOnline,
         COALESCE(arr.nome, 'Venda Online'), 
+        arr.placa,
         COALESCE(arr.urlFotoDocumento, 'https://seu-s3.com/avatar-padrao.png'), 
         a.valorArrematacao, 
-        a.status
+        a.status,
+        a.urlFotoAssinatura
     ) 
     FROM ArrematacaoEntity a 
     JOIN a.lote l 

@@ -1,0 +1,1 @@
+ALTER TABLE arrematacoes ADD COLUMN venda_condicional BOOLEAN NOT NULL DEFAULT FALSE;

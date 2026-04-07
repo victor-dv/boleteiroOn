@@ -23,5 +23,7 @@ public class UserEntity {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.BOLETEIRO;
+    @Column(nullable = false)
+    private boolean status = true;
 
 }

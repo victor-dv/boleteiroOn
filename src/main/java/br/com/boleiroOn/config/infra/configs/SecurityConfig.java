@@ -36,15 +36,8 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/upload").hasRole("ADMIN")
-                        .requestMatchers("/api/leiloes/**").hasRole("ADMIN")
-                        .requestMatchers("/api/lotes/**").hasRole("ADMIN")
-                        .requestMatchers("/api/arrematantes/**").authenticated()
-                        .requestMatchers("/api/arrematacao/**").authenticated()
-                        .requestMatchers("/api/consulta/**").authenticated()
-
-
+                        .requestMatchers("/api/users/login").permitAll()
+                        .requestMatchers("/api/email/validar-email").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
