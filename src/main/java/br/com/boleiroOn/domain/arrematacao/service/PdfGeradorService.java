@@ -18,7 +18,7 @@ public class PdfGeradorService {
 
     private final SpringTemplateEngine templateEngine;
 
-    public byte[] gerarAutoArrematacaoPdf(ArrematacaoEntity arrematacao, String assinaturaBase64) throws Exception {
+    public byte[] gerarAutoArrematacaoPdf(ArrematacaoEntity arrematacao, String fotoBase64, String assinaturaBase64) throws Exception {
 
         Context context = new Context();
 
@@ -81,6 +81,7 @@ public class PdfGeradorService {
             context.setVariable("endereco", "Não Informado");
         }
 
+        context.setVariable("fotoBase64", fotoBase64);
         context.setVariable("assinaturaBase64", assinaturaBase64);
 
         String htmlProcessado = templateEngine.process("auto-arrematacao", context);

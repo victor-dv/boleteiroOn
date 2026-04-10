@@ -1,39 +1,176 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8" />
     <title>Auto de Arrematação</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 40px; color: #333; line-height: 1.5; }
-        .cabecalho { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
-        .secao { margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; }
-        h3 { margin-top: 0; border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #444; font-size: 16px; }
+        @page {
+            margin: 1cm 1.5cm; /* Margens seguras e otimizadas para 1 página */
+        }
 
-        /* Sistema de grid simples para dados do arrematante */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            color: #2c3e50;
+            font-size: 11.5px;
+            line-height: 1.4;
+        }
+
+        .cabecalho {
+            text-align: center;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .cabecalho h2 {
+            margin: 0 0 3px 0;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #1a252f;
+        }
+        .cabecalho-info {
+            display: table;
+            width: 100%;
+            font-size: 12px;
+        }
+        .cabecalho-info-left { display: table-cell; text-align: left; }
+        .cabecalho-info-right { display: table-cell; text-align: right; }
+
+
+        .secao {
+            background-color: #fbfcfc;
+            border: 1px solid #ecf0f1;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-bottom: 12px;
+        }
+        .secao-info {
+            background-color: #fffaf0;
+            border: 1px solid #faebcc;
+            border-left: 4px solid #f39c12; /* Destaque Laranja/Dourado */
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-bottom: 12px;
+            color: #8a6d3b;
+        }
+
+        .secao-legal {
+            background-color: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            border-left: 4px solid #7f8c8d; /* Destaque Cinza */
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-bottom: 12px;
+        }
+
+        h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #e2e2e2;
+            padding-bottom: 4px;
+            color: #2c3e50;
+            font-size: 13px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        p { margin: 3px 0; }
+
+        .container-validacao {
+            display: table;
+            width: 100%;
+            margin-top: 25px;
+            page-break-inside: avoid; /* Evita que quebre no meio entre duas páginas */
+        }
+        .coluna-validacao {
+            display: table-cell;
+            width: 50%;
+            text-align: center;
+            vertical-align: top; /* Adicionado: Força os dois lados a começarem na exata mesma altura no topo */
+            padding: 10px;
+        }
+        .foto-seguranca {
+            max-width: 140px;
+            max-height: 120px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            display: inline-block; /* Alterado para alinhar perfeitamente no centro do PDF */
+            margin-bottom: 10px;
+        }
+        .img-assinatura {
+            max-width: 200px;
+            max-height: 80px;
+            display: inline-block; /* Alterado para alinhar perfeitamente no centro do PDF */
+            margin-bottom: 5px;
+        }
+
+        /* --- SISTEMA DE GRID (Dados) --- */
         .info-grid { display: table; width: 100%; }
         .info-row { display: table-row; }
-        .info-cell { display: table-cell; padding: 5px 0; width: 50%; }
+        .info-cell { display: table; width: 50%; }
+        .info-cell strong { color: #34495e; }
 
-        /* Container de Assinatura */
-        .assinatura-box { text-align: center; margin-top: 60px; page-break-inside: avoid; }
-        .assinatura-img { max-width: 250px; max-height: 120px; display: block; margin: 0 auto; }
-        .linha-assinatura { border-top: 1px solid #000; width: 350px; margin: 0 auto; padding-top: 5px; }
+        /* --- LISTA DE TERMOS --- */
+        .termos-lista p {
+            margin: 4px 0;
+            text-align: justify;
+            font-size: 11px;
+        }
+        .termos-lista strong { color: #2c3e50; }
+
+        /* --- ASSINATURA --- */
+        .assinatura-box {
+            text-align: center;
+            margin-top: 25px;
+            page-break-inside: avoid;
+        }
+        .assinatura-img {
+            max-width: 220px;
+            max-height: 80px;
+            display: block;
+            margin: 0 auto;
+        }
+        .espaco-assinatura { height: 40px; }
+        .linha-assinatura {
+            border-top: 1px solid #2c3e50;
+            width: 200px; /* Reduzido de 300px: Evita estourar o limite da coluna de 50% */
+            margin: 0 auto;
+            padding-top: 5px;
+        }
+        .linha-assinatura p.nome { margin: 0; font-weight: bold; font-size: 12px; color: #2c3e50; text-transform: uppercase; }
+        .linha-assinatura p.cargo { margin: 0; font-size: 10px; color: #7f8c8d; }
     </style>
 </head>
 <body>
 
 <div class="cabecalho">
-    <h2>AUTO DE ARREMATAÇÃO</h2>
-    <p><strong>Leilão:</strong> <span th:text="${nomeLeilao}">Nome do Leilão</span></p>
-    <p>Data da Arrematação: <span th:text="${dataArrematacao}">01/01/2026</span></p>
+    <h2>Auto de Arrematação</h2>
+    <div class="cabecalho-info">
+        <div class="cabecalho-info-left"><strong>Leilão:</strong> <span th:text="${nomeLeilao}">Nome do Leilão</span></div>
+        <div class="cabecalho-info-right"><strong>Data da Arrematação:</strong> <span th:text="${dataArrematacao}">01/01/2026</span></div>
+    </div>
 </div>
 
 <div class="secao">
     <h3>Dados da Arrematação</h3>
-    <p><strong>Lote:</strong> <span th:text="${numeroLote}">001</span></p>
-    <p><strong>Condicional:</strong> <span th:text="${condicional}">Não</span></p>
-    <p><strong>Valor da Arrematação:</strong> <span th:text="${valorArremate}">R$ 0,00</span></p>
-    <p><strong>Comissão do Leiloeiro (5%):</strong> <span th:text="${valorComissao}">R$ 0,00</span></p>
+    <div class="info-grid">
+        <div class="info-row">
+            <div class="info-cell"><strong>Lote:</strong> <span th:text="${numeroLote}">001</span></div>
+            <div class="info-cell"><strong>Condicional:</strong> <span th:text="${condicional}">Não</span></div>
+        </div>
+        <div class="info-row">
+            <div class="info-cell"><strong>Valor da Arrematação:</strong> <span th:text="${valorArremate}">R$ 0,00</span></div>
+            <div class="info-cell"><strong>Comissão do Leiloeiro (5%):</strong> <span th:text="${valorComissao}">R$ 0,00</span></div>
+        </div>
+    </div>
+</div>
+
+<div class="secao-info">
+    <h3>Condições de Venda</h3>
+    <p>&#8226; Não é permitido a troca de arrematante do leilão. Portanto a Nota de Venda em Leilão será emitida em nome do arrematante.</p>
+    <p>&#8226; O arrematante em hipótese nenhuma poderá desistir do lote vendido condicionalmente após a aceitação da empresa comitente.</p>
+    <p>&#8226; Os cheques recebidos pela arrematação dos lotes no pregão serão depositados pelo leiloeiro em 48 horas úteis. Caso o arrematante deseje realizar outra forma de pagamento, deverá fazê-lo em 24 horas úteis, comprovar para a equipe do leiloeiro, e solicitar a devolução ou destruição do cheque.</p>
 </div>
 
 <div class="secao">
@@ -56,13 +193,37 @@
     </div>
 </div>
 
-<div class="assinatura-box">
-    <img class="assinatura-img" th:if="${assinaturaBase64 != null}" th:src="${assinaturaBase64}" alt="Assinatura" />
-    <div th:unless="${assinaturaBase64 != null}" style="height: 100px;"></div>
+<div class="secao-legal">
+    <h3>Termo de Compromisso de Ajustamento de Conduta</h3>
+    <p style="margin-bottom: 8px; font-size: 11px;">Conforme "Termo de Compromisso de Conduta" n° 12/99 assumido pelo Sindicato dos Leiloeiros do Estado de São Paulo junto ao Ministério Público do Estado de São Paulo ficou estabelecido o que segue:</p>
+    <div class="termos-lista">
+        <p><strong>A)</strong> Os Bens vendidos em Leilão são sem garantia, dada a natureza da atividade profissional do leiloeiro.</p>
+        <p><strong>B)</strong> Correm por conta dos arrematantes dos bens leiloados as despesas com carregamento, transporte e impostos quando incidentes.</p>
+        <p><strong>C)</strong> O pagamento dos lotes arrematados será integral e a vista, no ato da arrematação, incluindo a comissão de 5% (cinco por cento) do leiloeiro e quaisquer valores administrativos adicionais.</p>
+        <p><strong>D)</strong> A retirada dos lotes arrematados será de acordo com a programação estabelecida pela empresa comitente sendo o carregamento e transporte de conta do arrematante.</p>
+        <p><strong>E)</strong> A comissão de 5% (cinco por cento) será paga pelo arrematante de acordo com o decreto n° 21.981 de 19/10/1932 e as alterações feitas pelo decreto n° 22.427 de 01/02/1933.</p>
+        <p><strong>F)</strong> O estado de conservação e aparência que se encontram os bens poderá ser verificado "in loco" pelos interessados, durante a visitação anterior ao pregão, conforme notificação pelo Leiloeiro Oficial do Edital de leilão, ocasião na qual as dúvidas acerca do estado do bem poderão ser dirimidas.</p>
+    </div>
+</div>
 
-    <div class="linha-assinatura">
-        <p style="margin: 0; font-weight: bold;" th:text="${nomeArrematante}">Fulano de Tal</p>
-        <p style="margin: 0; font-size: 12px; color: #666;">Assinatura do Arrematante</p>
+<div class="container-validacao">
+    <div class="coluna-validacao">
+        <p style="margin: 0 0 10px 0; font-size: 11px; color: #7f8c8d; text-transform: uppercase;">Foto de Segurança</p>
+
+        <img class="foto-seguranca" th:if="${fotoBase64 != null}" th:src="${fotoBase64}" alt="Foto de Segurança" />
+        <div th:unless="${fotoBase64 != null}" style="height: 140px;"></div>
+    </div>
+
+    <div class="coluna-validacao">
+        <p style="margin: 0 0 10px 0; font-size: 11px; color: #7f8c8d; text-transform: uppercase;">Assinatura Digital</p>
+
+        <img class="img-assinatura" th:if="${assinaturaBase64 != null}" th:src="${assinaturaBase64}" alt="Assinatura" />
+        <div th:unless="${assinaturaBase64 != null}" style="height: 80px;"></div>
+
+        <div class="linha-assinatura">
+            <p class="nome" th:text="${nomeArrematante}">Fulano de Tal</p>
+            <p class="cargo">Assinatura do Arrematante</p>
+        </div>
     </div>
 </div>
 
