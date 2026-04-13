@@ -24,12 +24,12 @@ public class AWSService {
     private String region;
 
 
-    public String uploadFile(MultipartFile file) {
+    public String uploadFile(MultipartFile file, String folder) {
         if (file.isEmpty()) {
             throw new BusinessException("O arquivo de imagem não pode estar vazio.");
         }
 
-        String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename().replace(" ", "_");
+        String fileName = folder + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename().replace(" ", "_");
 
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()

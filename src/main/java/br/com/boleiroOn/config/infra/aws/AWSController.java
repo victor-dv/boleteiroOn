@@ -20,10 +20,10 @@ public class AWSController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<AWSResponseDto>> uploadImage(
-            @RequestParam("file")
-            MultipartFile file) {
+            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "folder", defaultValue = "geral") String folder) {
 
-        String imageUrl = s3Service.uploadFile(file);
+        String imageUrl = s3Service.uploadFile(file, folder);
         var response = new AWSResponseDto(imageUrl);
 
         return ResponseEntity.ok(ApiResponse.success(response, "Upload realizado com sucesso"));

@@ -1,5 +1,6 @@
 package br.com.boleiroOn.domain.leilao.service;
 
+import br.com.boleiroOn.config.infra.aws.AWSService;
 import br.com.boleiroOn.domain.leilao.dto.LeilaoRequestDto;
 import br.com.boleiroOn.domain.leilao.dto.LeilaoResponseDto;
 import br.com.boleiroOn.domain.leilao.entity.LeilaoEntity;
