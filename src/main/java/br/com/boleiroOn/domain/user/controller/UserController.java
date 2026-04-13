@@ -23,6 +23,11 @@ public class UserController {
             var user = userService.registerUser(dto);
             return ResponseEntity.ok(ApiResponse.success(UserResponseDto.from(user), "Usuário registrado com sucesso"));
     }
+    @PatchMapping("/define-password")
+    public ResponseEntity<ApiResponse<String>> defineInitialPassword(@RequestBody @Valid DefinePasswordDto dto) {
+        userService.definiInitialPassword(dto);
+        return ResponseEntity.ok(ApiResponse.success("Senha definida com sucesso", "Senha definida com sucesso"));
+    }
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponseDto>> login(@RequestBody @Valid LoginRequestDto request) {
         LoginResponseDto response = userService.login(request);

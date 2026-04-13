@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -25,5 +27,10 @@ public class UserEntity {
     private UserRole role = UserRole.BOLETEIRO;
     @Column(nullable = false)
     private boolean status = true;
+    @Column(name = "creation_token", unique = true)
+    private String creationToken;
+
+    @Column(name = "token_expiration")
+    private LocalDateTime tokenExpiration;
 
 }

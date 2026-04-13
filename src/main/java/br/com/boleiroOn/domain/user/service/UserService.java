@@ -1,10 +1,8 @@
 package br.com.boleiroOn.domain.user.service;
 
 import br.com.boleiroOn.config.infra.configs.JwtToken;
-import br.com.boleiroOn.domain.user.dto.LoginRequestDto;
-import br.com.boleiroOn.domain.user.dto.LoginResponseDto;
-import br.com.boleiroOn.domain.user.dto.UserRegisterDto;
-import br.com.boleiroOn.domain.user.dto.UserUpdateDto;
+import br.com.boleiroOn.config.infra.email.service.EnviarDefinicaoSenhaService;
+import br.com.boleiroOn.domain.user.dto.*;
 import br.com.boleiroOn.domain.user.entity.UserEntity;
 import br.com.boleiroOn.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +13,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EnviarDefinicaoSenhaService enviarDefinicaoSenhaService;
     private final JwtToken jwtToken;
 
     @Transactional
@@ -41,10 +42,33 @@ public class UserService {
         user.setLogin(userRegisterDto.login());
         user.setRole(userRegisterDto.role());
 
-        user.setPassword(passwordEncoder.encode(userRegisterDto.password()));
+        user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
+
+        String token =  UUID.randomUUID().toString();
+        user.setCreationToken(token);
+        user.setTokenExpiration(LocalDateTime.now().plusHours(10));
+
+        enviarDefinicaoSenhaService.enviarEmailConvite(user.getLogin(), user.getEmail(), token);
 
         return userRepository.save(user);
     }
+    @Transactional
+    public void definiInitialPassword(DefinePasswordDto dto) {
+        UserEntity user = userRepository.findByCreationToken(dto.token())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token inválido ou não encontrado."));
+
+        if (user.getTokenExpiration().isBefore(LocalDateTime.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Este link de convite expirou. Solicite um novo reenvio.");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.newPassword()));
+
+        user.setCreationToken(null);
+        user.setTokenExpiration(null);
+
+        userRepository.save(user);
+    }
+
 
     public LoginResponseDto login(LoginRequestDto request) {
         var user = userRepository.findByLogin(request.login())
@@ -98,6 +122,13 @@ public class UserService {
         user.setStatus(false);
         return userRepository.save(user);
     }
+    public UserEntity activate(Long id){
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        user.setStatus(true);
+        return userRepository.save(user);
+    }
+
     public List<UserEntity> getByStatus(boolean status){
         return userRepository.findByStatus(status);
     }

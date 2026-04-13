@@ -1,0 +1,3 @@
+ALTER TABLE users
+ADD COLUMN creation_token VARCHAR(255) UNIQUE,
+ADD COLUMN token_expiration TIMESTAMP;
