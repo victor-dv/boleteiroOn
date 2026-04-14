@@ -1,11 +1,11 @@
 package br.com.boleiroOn.domain.user.controller;
 
 import br.com.boleiroOn.domain.user.dto.*;
+import br.com.boleiroOn.domain.user.entity.UserEntity;
 import br.com.boleiroOn.domain.user.service.UserService;
 import br.com.boleiroOn.shared.dto.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,10 +53,21 @@ public class UserController {
         var user = userService.falsoDelete(id);
         return ResponseEntity.ok(ApiResponse.success(UserResponseDto.from(user), "Usuário desativado com sucesso"));
     }
+    @PatchMapping("/{id}/ativar")
+    public ResponseEntity<ApiResponse<UserResponseDto>> ativar(@PathVariable Long id) {
+        var user = userService.activate(id);
+        return ResponseEntity.ok(ApiResponse.success(UserResponseDto.from(user), "Usuário ativado com sucesso"));
+    }
     @GetMapping("/status/{status}")
     public ResponseEntity<ApiResponse<Iterable<UserResponseDto>>> getByStatus(@PathVariable boolean status) {
         List<UserResponseDto> users = userService.getByStatus(status).stream().map(UserResponseDto::from).toList();
         return ResponseEntity.ok(ApiResponse.success(users, "Usuários obtidos com sucesso"));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<UserEntity>> delete(@PathVariable Long id){
+        var user = userService.delete(id);
+        return ResponseEntity.ok(ApiResponse.success(user, "Usuario deletado"));
+
     }
 
 }

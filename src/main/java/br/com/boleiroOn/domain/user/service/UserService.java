@@ -77,6 +77,9 @@ public class UserService {
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciais inválidas");
         }
+        if (user.isStatus() != true){
+            throw  new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário desativado");
+        }
 
         String token = jwtToken.generateToken(user.getLogin(), user.getId(), user.getRole().name());
         return new LoginResponseDto(token, user.getName(), user.getEmail());
@@ -136,6 +139,9 @@ public class UserService {
     public UserEntity delete(Long id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        if (user.isStatus() != true){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Somente usuários desativados são deletados");
+        }
         userRepository.delete(user);
         return user;
     }
