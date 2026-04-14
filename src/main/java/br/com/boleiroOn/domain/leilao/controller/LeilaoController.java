@@ -31,6 +31,12 @@ public class LeilaoController {
         return ResponseEntity.created(uri)
                 .body(ApiResponse.success(responseDto, "Leilão criado com sucesso"));
     }
+    @PutMapping("/{id}")
+    public ResponseEntity <ApiResponse<LeilaoResponseDto>> update(@PathVariable Long id, @RequestBody @Valid LeilaoRequestDto dto) {
+        var leilaoAtualizado = leilaoService.update(id, dto);
+        var response = new LeilaoResponseDto(leilaoAtualizado);
+        return ResponseEntity.ok(ApiResponse.success(response, "Leilão atualizado com sucesso"));
+    }
 
     @GetMapping("/")
     public ResponseEntity<ApiResponse<List<LeilaoDetalhadoResponseDto>>> getAll() {
