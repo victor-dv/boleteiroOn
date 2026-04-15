@@ -8,6 +8,8 @@ import br.com.boleiroOn.domain.arrematacao.enums.StatusPagamentoArrematacao;
 import br.com.boleiroOn.domain.arrematacao.repository.ArrematacaoRepository;
 import br.com.boleiroOn.domain.arrematante.repository.ArrematanteRepository;
 import br.com.boleiroOn.domain.lote.repository.LoteRepository;
+import br.com.boleiroOn.domain.relatorio.entity.DocumentoAuditoriaEntity;
+import br.com.boleiroOn.domain.relatorio.repository.RelatorioRepository;
 import br.com.boleiroOn.shared.exception.BusinessException;
 import br.com.boleiroOn.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,8 @@ public class ArrematacaoService {
     private final PdfGeradorService pdfGeradorService;
     private final AWSService s3StorageService;
     private final EnviarEmailAutoService enviarEmailAutoService;
+    private final RelatorioRepository relatorioRepository;
+
 
     @Transactional
     public ArrematacaoEntity create(ArrematacaoRequestDto data) {
@@ -95,13 +99,24 @@ public class ArrematacaoService {
             String nomeArquivoFoto = "fotos-assinaturas/assinatura_arrematacao_" + arrematacaoId + "_" + System.currentTimeMillis() + ".jpg";
             String keyFotoS3 = s3StorageService.uploadFile(fotoBytes, nomeArquivoFoto, "image/jpeg");
 
-            String nomeArquivoPdf = "autos-arrematacao/auto_lote_" + arrematacao.getLote() + "_" + System.currentTimeMillis() + ".pdf";
+            String nomeArquivoPdf = "autos-arrematacao/auto_lote_" + arrematacao.getLote().getId() + "_" + System.currentTimeMillis() + ".pdf";
             String keyPdfS3 = s3StorageService.uploadFile(pdfBytes, nomeArquivoPdf, "application/pdf");
 
             arrematacao.setUrlFotoAssinatura(keyFotoS3);
             arrematacao.setUrlAutoPdf(keyPdfS3);
 
             arrematacaoRepository.save(arrematacao);
+
+            DocumentoAuditoriaEntity auditoria = DocumentoAuditoriaEntity.builder()
+                    .leilaoId(arrematacao.getLote().getLeilao().getId())
+                    .arrematante(arrematacao.getArrematante())
+                    .lote(arrematacao.getLote())
+                    .tipoDocumento("AUTO_ARREMATACAO")
+                    .urlS3(keyPdfS3)
+                    .statusEmail("ENVIADO")
+                    .build();
+            relatorioRepository.save(auditoria);
+
             enviarEmailAutoService.enviarEmailComLinkPdf(arrematacao, keyPdfS3);
 
         } catch (Exception e) {
