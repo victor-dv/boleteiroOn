@@ -1,6 +1,7 @@
 package br.com.boleiroOn.config.infra.relatorio.repository;
 
 import br.com.boleiroOn.config.infra.relatorio.dto.RelatorioAuditoriaDto;
+import br.com.boleiroOn.config.infra.relatorio.dto.RelatorioExcelDto;
 import br.com.boleiroOn.config.infra.relatorio.dto.RelatorioFinanceiroDto;
 import br.com.boleiroOn.config.infra.relatorio.dto.RelatorioResumoDto;
 import br.com.boleiroOn.config.infra.relatorio.entity.DocumentoAuditoriaEntity;
@@ -15,7 +16,7 @@ import java.util.List;
 public interface RelatorioRepository extends JpaRepository<DocumentoAuditoriaEntity, Long> {
 
     @Query("""
-           SELECT new br.com.boleiroOn.domain.relatorio.dto.RelatorioResumoDto(
+           SELECT new br.com.boleiroOn.config.infra.relatorio.dto.RelatorioResumoDto(
                l.id,
                l.nome,
                (SELECT COUNT(lt) FROM LoteEntity lt WHERE lt.leilao.id = l.id),
@@ -29,7 +30,7 @@ public interface RelatorioRepository extends JpaRepository<DocumentoAuditoriaEnt
     RelatorioResumoDto buscarResumoLeilao(@Param("leilaoId") Long leilaoId);
 
     @Query("""
-           SELECT new br.com.boleiroOn.domain.relatorio.dto.RelatorioFinanceiroDto(
+           SELECT new br.com.boleiroOn.config.infra.relatorio.dto.RelatorioFinanceiroDto(
                a.id,
                COALESCE(ar.nome, 'Venda Online'),
                lt.descricao,
@@ -48,7 +49,7 @@ public interface RelatorioRepository extends JpaRepository<DocumentoAuditoriaEnt
     List<RelatorioFinanceiroDto> buscarRelatorioFinanceiro(@Param("leilaoId") Long leilaoId);
 
     @Query("""
-           SELECT new br.com.boleiroOn.domain.relatorio.dto.RelatorioAuditoriaDto(
+           SELECT new br.com.boleiroOn.config.infra.relatorio.dto.RelatorioAuditoriaDto(
                d.id,
                COALESCE(ar.nome, 'Venda Online'),
                lt.descricao,
@@ -65,4 +66,27 @@ public interface RelatorioRepository extends JpaRepository<DocumentoAuditoriaEnt
            ORDER BY d.dataEnvio DESC
            """)
     List<RelatorioAuditoriaDto> buscarRelatorioAuditoria(@Param("leilaoId") Long leilaoId);
+
+    @Query("""
+           SELECT new br.com.boleiroOn.config.infra.relatorio.dto.RelatorioExcelDto(
+               lt.numeroLote,
+               ar.nome,
+               ar.email,
+               ar.documento,
+               ar.celular,
+               ar.cep,
+               ar.endereco,
+               ar.cidade,
+               ar.uf,
+               a.valorArrematacao,
+               a.valorComissao,
+               (a.valorArrematacao + a.valorComissao)
+           )
+           FROM ArrematacaoEntity a
+           JOIN a.arrematante ar
+           JOIN a.lote lt
+           WHERE lt.leilao.id = :leilaoId
+           ORDER BY lt.numeroLote ASC
+           """)
+    List<RelatorioExcelDto> buscarDadosParaExcel(@Param("leilaoId") Long leilaoId);
 }

@@ -6,12 +6,15 @@ import br.com.boleiroOn.config.infra.relatorio.dto.RelatorioResumoDto;
 import br.com.boleiroOn.config.infra.relatorio.service.RelatorioService;
 import br.com.boleiroOn.shared.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -37,5 +40,15 @@ public class RelatorioController {
     public ResponseEntity<ApiResponse<List<RelatorioAuditoriaDto>>> getRelatorioAuditoria(@PathVariable Long leilaoId) {
         var auditoria = relatorioService.getRelatorioAuditoria(leilaoId);
         return ResponseEntity.ok(ApiResponse.success(auditoria, "Relatório de auditoria obtido com sucesso"));
+    }
+
+    @GetMapping("/excel/{leilaoId}")
+    public ResponseEntity<byte[]> downloadRelatorioExcel(@PathVariable Long leilaoId) throws IOException {
+        byte[] content = relatorioService.gerarRelatorioExcel(leilaoId);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=relatorio_arrematacao_" + leilaoId + ".xlsx")
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(content);
     }
 }
