@@ -154,5 +154,25 @@ public class ArrematacaoService {
         return arrematacaoRepository.save(arrematacao);
     }
 
+    @Transactional
+    public ArrematacaoEntity mudarPlacaArrematante(Long arrematacaoId, ArrematacaoUpdatePlacaDto data) {
+        var arrematacao = arrematacaoRepository.findById(arrematacaoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Arrematação não encontrada."));
+
+        if (arrematacao.isVendaOnline()) {
+            throw new BusinessException("Esta arrematação é de venda online e não possui placa de arrematante presencial.");
+        }
+
+        var novoArrematante = arrematanteRepository.findByLeilaoIdAndPlaca(arrematacao.getLote().getLeilao().getId(), data.novaPlaca())
+                .orElseThrow(() -> new ResourceNotFoundException("Nenhum arrematante presencial encontrado com a placa " + data.novaPlaca() + " neste leilão."));
+
+        arrematacao.setArrematante(novoArrematante);
+        arrematacao.setUrlFotoAssinatura(null);
+        arrematacao.setAssinaturaBase64(null);
+        arrematacao.setUrlAutoPdf(null);
+
+        return arrematacaoRepository.save(arrematacao);
+    }
+
 
 }

@@ -2,6 +2,7 @@ package br.com.boleiroOn.domain.arrematacao.dto;
 
 import br.com.boleiroOn.domain.arrematacao.enums.StatusPagamentoArrematacao;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 public record ArrematacaoFeedDto(
@@ -16,5 +17,5 @@ public record ArrematacaoFeedDto(
         StatusPagamentoArrematacao status,
         String urlFotoAssinatura
 
-) {
+) implements Serializable {
 }

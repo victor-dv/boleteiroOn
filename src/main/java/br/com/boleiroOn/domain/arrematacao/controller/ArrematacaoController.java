@@ -44,6 +44,12 @@ public class ArrematacaoController {
         return ResponseEntity.ok(ApiResponse.success(null, "Valor da arrematação atualizado com sucesso."));
     }
 
+    @PatchMapping("/{id}/placa")
+    public ResponseEntity<ApiResponse<Void>>mudarPlaca(@PathVariable Long id, @RequestBody @Valid ArrematacaoUpdatePlacaDto data) {
+        arrematacaoService.mudarPlacaArrematante(id, data);
+        return ResponseEntity.ok(ApiResponse.success(null, "Placa do arrematante atualizada com sucesso."));
+    }
+
     @GetMapping("/feed/{leilaoId}")
     public ResponseEntity<ApiResponse<List<ArrematacaoFeedDto>>> buscarFeed(@PathVariable Long leilaoId) {
         List<ArrematacaoFeedDto> feed = arrematacaoService.buscarFeedArrematacoes(leilaoId);
