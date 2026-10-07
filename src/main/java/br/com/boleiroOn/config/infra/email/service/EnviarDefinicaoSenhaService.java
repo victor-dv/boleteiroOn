@@ -71,7 +71,7 @@ public class EnviarDefinicaoSenhaService {
         );
 
         EmailEntity novaMensagem = new EmailEntity();
-        novaMensagem.setFrom("BoleiroOn <" + emailRemetente + ">");
+        novaMensagem.setFrom("NexLeilões <" + emailRemetente + ">");
         novaMensagem.setTo(emailDestino);
         novaMensagem.setSubject("Convite de Acesso - Defina sua senha no BoleiroOn");
         novaMensagem.setText(html);

@@ -75,9 +75,9 @@ public class EnviarRecuperacaoSenhaService {
         );
 
         EmailEntity novaMensagem = new EmailEntity();
-        novaMensagem.setFrom("BoleiroOn <" + emailRemetente + ">");
+        novaMensagem.setFrom("NexLeilões <" + emailRemetente + ">");
         novaMensagem.setTo(emailDestino);
-        novaMensagem.setSubject("Recuperação de Senha - BoleiroOn");
+        novaMensagem.setSubject("Recuperação de Senha - NexLeilões");
         novaMensagem.setText(html);
 
         emailService.enviarEmail(novaMensagem);

@@ -67,7 +67,7 @@ public class EnviarEmailVerificationService {
         );
 
         EmailEntity email = new EmailEntity();
-        email.setFrom("BoleiroOn <" + emailVerification + ">");
+        email.setFrom("NexLeilões <" + emailVerification + ">");
         email.setTo(arrematante.getEmail());
         email.setSubject("Validação de Cadastro - Leilão " + arrematante.getLeilao().getNome());
 
