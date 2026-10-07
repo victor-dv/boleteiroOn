@@ -19,7 +19,7 @@ public class EnviarDefinicaoSenhaService {
 
     public void enviarEmailConvite(String nomeUsuario, String emailDestino, String token) {
 
-        String linkDefinicao = frontUrl + "definir-senha?token=" + token;
+        String linkDefinicao = frontUrl + "/definir-senha?token=" + token;
 
         String html = """
             <!DOCTYPE html>
