@@ -21,7 +21,7 @@ public class EnviarEmailVerificationService {
     private String emailVerification;
 
     public void enviarEmailDeValidacao(ArrematanteEntity arrematante, String token){
-        String link = "http://192.168.18.199:8080/api/email/validar-email?token=" + token;
+        String link = "https://gleaming-comfort-production-f600.up.railway.app/api/email/validar-email?token=" + token;
 
         String htmlTemplate = """
             <!DOCTYPE html>
