@@ -11,6 +11,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,7 @@ public class LoteService {
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
+    @CacheEvict(value = "lotes-por-leilao", key = "#data.leilaoId()")
     public LoteEntity create(LoteRequestDto data) {
         var leilao = leilaoRepository.findById(data.leilaoId())
                 .orElseThrow(() -> new ResourceNotFoundException("Leilão não encontrado."));
@@ -46,6 +49,7 @@ public class LoteService {
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
+    @CacheEvict(value = "lotes-por-leilao", key = "#leilaoId")
     public List<LoteEntity> importarDeExcel(Long leilaoId, MultipartFile file) {
         var leilao = leilaoRepository.findById(leilaoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Leilão não encontrado."));
@@ -82,18 +86,21 @@ public class LoteService {
         }
     }
 
+    @Cacheable(value = "lotes-por-leilao", key = "#leilaoId", unless = "#result.isEmpty()")
     public List<LoteEntity> getAll(Long leilaoId) {
         var leilao = leilaoRepository.findById(leilaoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Leilão não encontrado."));
         return loteRepository.findByLeilaoId(leilaoId);
     }
     @PreAuthorize("hasRole('ADMIN')")
+    @CacheEvict(value = "lotes-por-leilao", key = "#lote.getLeilao().getId()")
     public LoteEntity delete(Long loteId) {
         var lote = loteRepository.findById(loteId).orElseThrow(() -> new ResourceNotFoundException("Lote não encontrado."));
         loteRepository.delete(lote);
         return lote;
     }
 
+    @CacheEvict(value = "lotes-por-leilao", key = "#lote.getLeilao().getId()")
     public LoteEntity update(Long loteId, LoteRequestDto data) {
         var lote = loteRepository.findById(loteId).orElseThrow(() -> new ResourceNotFoundException("Lote não encontrado."));
 
