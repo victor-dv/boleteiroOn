@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/users/forgot-password").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/users/define-password").permitAll()
                         .requestMatchers("/api/email/validar-email").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/arrematantes/validar-email").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
