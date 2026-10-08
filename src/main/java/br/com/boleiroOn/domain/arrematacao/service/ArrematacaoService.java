@@ -78,7 +78,7 @@ public class ArrematacaoService {
 
 
     @Transactional
-    @CacheEvict(value = {"arrematacoes-feed", "arrematacoes-feed-nulas", "arrematacoes-feed-assinadas"}, key = "#root.target.getLeilaoIdByArrematacaoId(#arrematacaoId)")
+    @CacheEvict(value = {"arrematacoes-feed", "arrematacoes-feed-nulas", "arrematacoes-feed-assinadas"}, key = "#root.target.getLeilaoIdByArrematacaoId(#arrematacaoId)", beforeInvocation = true)
     public void assinarAutoArrematacao(Long arrematacaoId, AssinaturaArrematacaoRequestDto data) {
         var arrematacao = arrematacaoRepository.findById(arrematacaoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Arrematação não encontrada."));
@@ -149,7 +149,7 @@ public class ArrematacaoService {
                 .toList();
     }
 
-    @CacheEvict(value = {"arrematacoes-feed", "arrematacoes-feed-nulas", "arrematacoes-feed-assinadas"}, key = "#root.target.getLeilaoIdByArrematacaoId(#arrematacaoId)")
+    @CacheEvict(value = {"arrematacoes-feed", "arrematacoes-feed-nulas", "arrematacoes-feed-assinadas"}, key = "#root.target.getLeilaoIdByArrematacaoId(#arrematacaoId)", beforeInvocation = true)
     public ArrematacaoEntity editarValorArrematacao(Long arrematacaoId, ArrematacaoRequestEditValDto data) {
         var arrematacao = arrematacaoRepository.findById(arrematacaoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Arrematação não encontrada."));
@@ -163,7 +163,7 @@ public class ArrematacaoService {
     }
 
     @Transactional
-    @CacheEvict(value = {"arrematacoes-feed", "arrematacoes-feed-nulas", "arrematacoes-feed-assinadas"}, key = "#root.target.getLeilaoIdByArrematacaoId(#arrematacaoId)")
+    @CacheEvict(value = {"arrematacoes-feed", "arrematacoes-feed-nulas", "arrematacoes-feed-assinadas"}, key = "#root.target.getLeilaoIdByArrematacaoId(#arrematacaoId)", beforeInvocation = true)
     public ArrematacaoEntity mudarPlacaArrematante(Long arrematacaoId, ArrematacaoUpdatePlacaDto data) {
         var arrematacao = arrematacaoRepository.findById(arrematacaoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Arrematação não encontrada."));
@@ -185,8 +185,8 @@ public class ArrematacaoService {
 
     public Long getLeilaoIdByArrematacaoId(Long arrematacaoId) {
         return arrematacaoRepository.findById(arrematacaoId)
-                .map(a -> a.getLote() != null && a.getLote().getLeilao() != null ? a.getLote().getLeilao().getId() : null)
-                .orElse(null);
+                .map(a -> a.getLote() != null && a.getLote().getLeilao() != null ? a.getLote().getLeilao().getId() : -1L)
+                .orElse(-1L);
     }
 
 }

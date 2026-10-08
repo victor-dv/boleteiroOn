@@ -93,14 +93,14 @@ public class LoteService {
         return loteRepository.findByLeilaoId(leilaoId);
     }
     @PreAuthorize("hasRole('ADMIN')")
-    @CacheEvict(value = "lotes-por-leilao", key = "#root.target.getLeilaoIdByLoteId(#loteId)")
+    @CacheEvict(value = "lotes-por-leilao", key = "#root.target.getLeilaoIdByLoteId(#loteId)", beforeInvocation = true)
     public LoteEntity delete(Long loteId) {
         var lote = loteRepository.findById(loteId).orElseThrow(() -> new ResourceNotFoundException("Lote não encontrado."));
         loteRepository.delete(lote);
         return lote;
     }
 
-    @CacheEvict(value = "lotes-por-leilao", key = "#root.target.getLeilaoIdByLoteId(#loteId)")
+    @CacheEvict(value = "lotes-por-leilao", key = "#root.target.getLeilaoIdByLoteId(#loteId)", beforeInvocation = true)
     public LoteEntity update(Long loteId, LoteRequestDto data) {
         var lote = loteRepository.findById(loteId).orElseThrow(() -> new ResourceNotFoundException("Lote não encontrado."));
 
@@ -120,8 +120,8 @@ public class LoteService {
 
     public Long getLeilaoIdByLoteId(Long loteId) {
         return loteRepository.findById(loteId)
-                .map(l -> l.getLeilao() != null ? l.getLeilao().getId() : null)
-                .orElse(null);
+                .map(l -> l.getLeilao() != null ? l.getLeilao().getId() : -1L)
+                .orElse(-1L);
     }
 
 }
