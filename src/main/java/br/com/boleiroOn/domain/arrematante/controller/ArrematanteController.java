@@ -4,6 +4,7 @@ import br.com.boleiroOn.config.infra.email.service.EnviarEmailVerificationServic
 import br.com.boleiroOn.domain.arrematante.dto.ArrematanteDetalhadoResponseDto;
 import br.com.boleiroOn.domain.arrematante.dto.ArrematanteRequestDto;
 import br.com.boleiroOn.domain.arrematante.dto.ArrematanteResponseDto;
+import br.com.boleiroOn.domain.arrematante.dto.ValidarEmailRequestDto;
 import br.com.boleiroOn.domain.arrematante.service.ArrematanteService;
 import br.com.boleiroOn.shared.dto.ApiResponse;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ArrematanteController {
 
     private final ArrematanteService arrematanteService;
+    private final EnviarEmailVerificationService verificationService;
     @PostMapping
     public ResponseEntity<ApiResponse<ArrematanteResponseDto>> create(@RequestBody @Valid ArrematanteRequestDto data, UriComponentsBuilder uriBuilder) {
 
@@ -62,5 +64,11 @@ public class ArrematanteController {
 
         return ResponseEntity.ok(ApiResponse.success(responseDto, "Arrematante obtido com sucesso"));
 
+    }
+
+    @PostMapping("/validar-email")
+    public ResponseEntity<Void> validarEmail(@Valid @RequestBody ValidarEmailRequestDto request) {
+        verificationService.validarEmail(request.token());
+        return ResponseEntity.ok().build();
     }
 }

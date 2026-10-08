@@ -7,7 +7,9 @@ import br.com.boleiroOn.domain.arrematante.entity.ArrematanteEntity;
 import br.com.boleiroOn.domain.arrematante.repository.ArrematanteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +22,11 @@ public class EnviarEmailVerificationService {
     @Value("${app.email.verification}")
     private String emailVerification;
 
+    @Value("${app.front.url}")
+    private String frontUrl;
+
     public void enviarEmailDeValidacao(ArrematanteEntity arrematante, String token){
-        String link = "https://gleaming-comfort-production-f600.up.railway.app/api/email/validar-email?token=" + token;
+        String link = frontUrl + "/validar-email?token=" + token;
 
         String htmlTemplate = """
             <!DOCTYPE html>
@@ -35,21 +40,21 @@ public class EnviarEmailVerificationService {
                 <tr>
                   <td align="center">
                     <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; border: 1px solid #e4e4e7;">
-                      
+                       
                       <div style="background-color: #18181b; padding: 20px; text-align: center; color: #ffffff;">
                         <h2 style="margin: 0; font-size: 24px;">Validação de E-mail</h2>
                       </div>
-                      
+                       
                       <div style="padding: 30px; line-height: 1.6; font-size: 16px;">
                         <p style="margin-top: 0;">Olá, <strong>%s</strong>,</p>
                         <p>Falta pouco! Para concluir o seu cadastro e confirmar a sua participação no leilão <strong>%s</strong>, por favor, valide o seu endereço de e-mail clicando no botão abaixo:</p>
-                        
+                         
                         <div style="text-align: center; margin: 35px 0;">
                           <a href="%s" target="_blank" style="background-color: #2563eb; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 6px; font-weight: bold; display: inline-block;">
                             Validar meu e-mail
                           </a>
                         </div>
-            
+             
                         <p style="font-size: 14px; color: #52525b; margin-bottom: 0;">
                           Se você não se cadastrou em nossa plataforma, pode ignorar este e-mail com segurança.
                         </p>
@@ -78,11 +83,11 @@ public class EnviarEmailVerificationService {
 
     public void validarEmail(String token) {
         VerificationEmailToken verificationToken = verificationTokenRepository.findByToken(token)
-                .orElseThrow(() -> new RuntimeException("Token de validação inválido."));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token de validação inválido."));
 
         if (verificationToken.estaExpirado()){
             verificationTokenRepository.delete(verificationToken);
-            throw new RuntimeException("Token de validação expirado.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token de validação expirado.");
         }
         ArrematanteEntity arrematante = verificationToken.getArrematante();
         arrematante.setEmailValidado(true);
