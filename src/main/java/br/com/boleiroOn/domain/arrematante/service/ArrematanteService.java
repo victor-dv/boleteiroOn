@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,7 +59,8 @@ public class ArrematanteService {
         arrematante = arrematanteRepository.save(arrematante);
 
         String tokenUUID = UUID.randomUUID().toString();
-        VerificationEmailToken verificationToken1 = new VerificationEmailToken(tokenUUID, arrematante, null);
+        OffsetDateTime expiracao = OffsetDateTime.now().plusHours(1);
+        VerificationEmailToken verificationToken1 = new VerificationEmailToken(tokenUUID, arrematante, expiracao);
         verificationTokenRepository.save(verificationToken1);
         enviarEmailVerificationService.enviarEmailDeValidacao(arrematante, tokenUUID);
         return arrematante;

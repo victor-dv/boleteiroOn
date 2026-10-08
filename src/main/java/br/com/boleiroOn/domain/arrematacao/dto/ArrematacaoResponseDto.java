@@ -4,7 +4,7 @@ import br.com.boleiroOn.domain.arrematacao.entity.ArrematacaoEntity;
 import br.com.boleiroOn.domain.arrematacao.enums.StatusPagamentoArrematacao;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record ArrematacaoResponseDto(
         Long id,
@@ -18,7 +18,7 @@ public record ArrematacaoResponseDto(
         BigDecimal valorArrematacao,
         BigDecimal valorComissao,
         StatusPagamentoArrematacao status,
-        LocalDateTime dataArrematacao
+        OffsetDateTime dataArrematacao
 ) {
     public ArrematacaoResponseDto(ArrematacaoEntity entity) {
         this(

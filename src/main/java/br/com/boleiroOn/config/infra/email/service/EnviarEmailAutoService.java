@@ -78,7 +78,7 @@ public class EnviarEmailAutoService {
         EmailEntity novaMensagem = new EmailEntity();
         novaMensagem.setFrom("NexLeilões <" + emailRemetente + ">");
         novaMensagem.setTo(emailArrematante);
-        novaMensagem.setSubject("Seu Auto de Arrematação foi gerado - Lote " + numeroLote);
+        novaMensagem.setSubject("Seu Boleto de Arrematação foi gerado - Lote " + numeroLote);
         novaMensagem.setText(html);
 
         emailService.enviarEmail(novaMensagem);

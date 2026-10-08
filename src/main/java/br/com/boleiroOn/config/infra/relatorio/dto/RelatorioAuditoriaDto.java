@@ -1,6 +1,6 @@
 package br.com.boleiroOn.config.infra.relatorio.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public record RelatorioAuditoriaDto(
     Long id,
@@ -9,6 +9,6 @@ public record RelatorioAuditoriaDto(
     Integer numeroLote,
     String tipoDocumento,
     String statusEmail,
-    LocalDateTime dataEnvio,
+    OffsetDateTime dataEnvio,
     String urlS3
 ) {}

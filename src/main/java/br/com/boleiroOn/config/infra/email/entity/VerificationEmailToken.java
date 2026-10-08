@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "tokens_validacao_arrematante")
@@ -21,15 +21,17 @@ public class VerificationEmailToken {
     @OneToOne
     @JoinColumn(name = "arrematante_id", nullable = false)
     private ArrematanteEntity arrematante;
-    private LocalDateTime dataExpiracao;
+    
+    @Column(columnDefinition = "TIMESTAMPTZ")
+    private OffsetDateTime dataExpiracao;
 
-    public VerificationEmailToken(String token, ArrematanteEntity arrematante, LocalDateTime dataExpiracao) {
+    public VerificationEmailToken(String token, ArrematanteEntity arrematante, OffsetDateTime dataExpiracao) {
         this.token = token;
         this.arrematante = arrematante;
-        this.dataExpiracao = LocalDateTime.now().plusHours(1);
+        this.dataExpiracao = dataExpiracao;
     }
     public boolean estaExpirado(){
-        return LocalDateTime.now().isAfter(this.dataExpiracao);
+        return OffsetDateTime.now().isAfter(this.dataExpiracao);
     }
 
 }

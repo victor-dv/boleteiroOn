@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @RequiredArgsConstructor
@@ -42,8 +42,8 @@ public class ArrematacaoEntity {
     @Column(nullable = false)
     private StatusPagamentoArrematacao status = StatusPagamentoArrematacao.PENDENTE_PAGAMENTO;
 
-    @Column(name = "data_arrematacao", nullable = false)
-    private LocalDateTime dataArrematacao = LocalDateTime.now();
+    @Column(name = "data_arrematacao", nullable = false, columnDefinition = "TIMESTAMPTZ")
+    private OffsetDateTime dataArrematacao;
 
     @Column(name = "url_foto_assinatura")
     private String urlFotoAssinatura;
@@ -59,6 +59,9 @@ public class ArrematacaoEntity {
     public void calcularComissao() {
         if (this.valorArrematacao != null) {
             this.valorComissao = this.valorArrematacao.multiply(new BigDecimal("0.05"));
+        }
+        if (this.dataArrematacao == null) {
+            this.dataArrematacao = OffsetDateTime.now();
         }
     }
 }

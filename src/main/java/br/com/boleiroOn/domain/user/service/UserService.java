@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,7 +48,7 @@ public class UserService {
 
         String token =  UUID.randomUUID().toString();
         user.setCreationToken(token);
-        user.setTokenExpiration(LocalDateTime.now().plusHours(10));
+        user.setTokenExpiration(OffsetDateTime.now().plusHours(10));
 
         enviarDefinicaoSenhaService.enviarEmailConvite(user.getLogin(), user.getEmail(), token);
 
@@ -62,7 +62,7 @@ public class UserService {
 
         String token = UUID.randomUUID().toString();
         user.setCreationToken(token);
-        user.setTokenExpiration(LocalDateTime.now().plusHours(2));
+        user.setTokenExpiration(OffsetDateTime.now().plusHours(2));
 
         userRepository.save(user);
 
@@ -74,7 +74,7 @@ public class UserService {
         UserEntity user = userRepository.findByCreationToken(dto.token())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token inválido ou não encontrado."));
 
-        if (user.getTokenExpiration().isBefore(LocalDateTime.now())) {
+        if (user.getTokenExpiration().isBefore(OffsetDateTime.now())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Este link expirou. Solicite um novo reenvio.");
         }
 

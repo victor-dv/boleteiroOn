@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "users")
@@ -30,7 +30,7 @@ public class UserEntity {
     @Column(name = "creation_token", unique = true)
     private String creationToken;
 
-    @Column(name = "token_expiration")
-    private LocalDateTime tokenExpiration;
+    @Column(name = "token_expiration", columnDefinition = "TIMESTAMPTZ")
+    private OffsetDateTime tokenExpiration;
 
 }

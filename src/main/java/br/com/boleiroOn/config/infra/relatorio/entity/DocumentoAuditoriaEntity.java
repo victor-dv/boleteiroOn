@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "documentos_auditoria", indexes = {
@@ -40,6 +40,6 @@ public class DocumentoAuditoriaEntity {
     @Column(name = "status_email", nullable = false, length = 20)
     private String statusEmail;
     @CreationTimestamp
-    @Column(name = "data_envio", nullable = false, updatable = false)
-    private LocalDateTime dataEnvio;
+    @Column(name = "data_envio", nullable = false, updatable = false, columnDefinition = "TIMESTAMPTZ")
+    private OffsetDateTime dataEnvio;
 }
