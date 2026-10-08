@@ -76,8 +76,8 @@ public class ArrematanteService {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @CacheEvict(value = "arrematantes-por-leilao", key = "#arr.getLeilao().getId()")
-    public ArrematanteEntity delete (Long id) {
+    @CacheEvict(value = "arrematantes-por-leilao", key = "#root.target.getLeilaoIdByArrematanteId(#id)")
+    public ArrematanteEntity delete(Long id) {
         var arr = arrematanteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Arrematante não encontrado."));
         var hasArrematacao = arrematacaoRepository.existsByArrematanteId(id);
@@ -89,7 +89,7 @@ public class ArrematanteService {
         return arr;
     }
 
-    @CacheEvict(value = "arrematantes-por-leilao", key = "#arr.getLeilao().getId()")
+    @CacheEvict(value = "arrematantes-por-leilao", key = "#root.target.getLeilaoIdByArrematanteId(#arrematanteId)")
     public ArrematanteEntity update(Long arrematanteId, ArrematanteRequestDto data) {
         var arr = arrematanteRepository.findById(arrematanteId)
                 .orElseThrow(() -> new ResourceNotFoundException("Arrematante não encontrado."));
@@ -110,10 +110,16 @@ public class ArrematanteService {
         return arrematanteRepository.save(arr);
     }
 
-    @Cacheable(value = "arrematantes-por-leilao", key = "#result.getLeilao().getId()", unless = "#result == null")
+    @Cacheable(value = "arrematantes-por-leilao", key = "#root.target.getLeilaoIdByArrematanteId(#id)", unless = "#result == null")
     public ArrematanteEntity getById(Long id) {
         return arrematanteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Arrematante não encontrado."));
+    }
+
+    public Long getLeilaoIdByArrematanteId(Long arrematanteId) {
+        return arrematanteRepository.findById(arrematanteId)
+                .map(a -> a.getLeilao() != null ? a.getLeilao().getId() : null)
+                .orElse(null);
     }
 
 }
