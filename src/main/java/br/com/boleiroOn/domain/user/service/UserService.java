@@ -7,8 +7,6 @@ import br.com.boleiroOn.domain.user.dto.*;
 import br.com.boleiroOn.domain.user.entity.UserEntity;
 import br.com.boleiroOn.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -104,18 +102,15 @@ public class UserService {
         return new LoginResponseDto(token, user.getName(), user.getEmail());
     }
 
-    @Cacheable(value = "users", key = "#id", unless = "#result == null")
     public UserEntity getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
     }
 
-    @Cacheable(value = "users", key = "'all'", unless = "#result.isEmpty()")
     public List<UserEntity> getAll(){
         return userRepository.findAll();
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public UserEntity update(Long id, UserUpdateDto data){
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
@@ -142,14 +137,12 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public UserEntity falsoDelete(Long id){
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
         user.setStatus(false);
         return userRepository.save(user);
     }
-    @CacheEvict(value = "users", allEntries = true)
     public UserEntity activate(Long id){
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new  ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
@@ -161,7 +154,6 @@ public class UserService {
         return userRepository.findByStatus(status);
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     public UserEntity delete(Long id) {
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));

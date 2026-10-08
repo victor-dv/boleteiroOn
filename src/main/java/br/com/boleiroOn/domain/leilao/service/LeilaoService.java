@@ -6,7 +6,6 @@ import br.com.boleiroOn.domain.leilao.dto.LeilaoResponseDto;
 import br.com.boleiroOn.domain.leilao.entity.LeilaoEntity;
 import br.com.boleiroOn.domain.leilao.repository.LeilaoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,8 @@ import java.util.List;
 public class LeilaoService {
 
     private final LeilaoRepository leilaoRepository;
+
     @Transactional
-    @CacheEvict(value = {"leiloes", "leiloes-status", "leilao-detalhado"}, allEntries = true)
     public LeilaoEntity create(LeilaoRequestDto data) {
         LeilaoEntity leilao = new LeilaoEntity();
         leilao.setNome(data.nome());
@@ -62,7 +61,6 @@ public class LeilaoService {
         return leilaoRepository.findAll();
     }
 
-    @CacheEvict(value = {"leiloes", "leiloes-status", "leilao-detalhado"}, allEntries = true)
     public LeilaoEntity falseDelete(Long id) {
         var leilao = leilaoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Leilão não encontrado."));
@@ -70,7 +68,6 @@ public class LeilaoService {
         return leilaoRepository.save(leilao);
     }
 
-    @CacheEvict(value = {"leiloes", "leiloes-status", "leilao-detalhado"}, allEntries = true)
     public LeilaoEntity voltaLeilao(Long id) {
         var leilao = leilaoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Leilão não encontrado."));

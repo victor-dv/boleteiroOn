@@ -13,8 +13,6 @@ import br.com.boleiroOn.config.infra.relatorio.repository.RelatorioRepository;
 import br.com.boleiroOn.shared.exception.BusinessException;
 import br.com.boleiroOn.shared.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +33,6 @@ public class ArrematacaoService {
 
 
     @Transactional
-    @CacheEvict(value = {"arrematacoes-feed", "arrematacoes-feed-nulas", "arrematacoes-feed-assinadas"}, key = "#data.leilaoId()")
     public ArrematacaoEntity create(ArrematacaoRequestDto data) {
         var lote = loteRepository.findByLeilaoIdAndNumeroLote(data.leilaoId(), data.numeroLote())
                 .orElseThrow(() -> new ResourceNotFoundException("Lote não encontrado para o leilão e número de lote informados."));
@@ -78,7 +75,6 @@ public class ArrematacaoService {
 
 
     @Transactional
-    @CacheEvict(value = {"arrematacoes-feed", "arrematacoes-feed-nulas", "arrematacoes-feed-assinadas"}, key = "#root.target.getLeilaoIdByArrematacaoId(#arrematacaoId)", beforeInvocation = true)
     public void assinarAutoArrematacao(Long arrematacaoId, AssinaturaArrematacaoRequestDto data) {
         var arrematacao = arrematacaoRepository.findById(arrematacaoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Arrematação não encontrada."));
@@ -128,12 +124,10 @@ public class ArrematacaoService {
         }
     }
 
-    @Cacheable(value = "arrematacoes-feed", key = "#leilaoId", unless = "#result.isEmpty()")
     public List<ArrematacaoFeedDto> buscarFeedArrematacoes(Long leilaoId) {
         return arrematacaoRepository.buscarUltimasArrematacoesDoLeilao(leilaoId);
     }
 
-    @Cacheable(value = "arrematacoes-feed-nulas", key = "#leilaoId", unless = "#result.isEmpty()")
     public List<ArrematacaoFeedDto> buscarAutoSemAssinatura(Long leilaoId) {
         var arrematacoes = arrematacaoRepository.buscarUltimasArrematacoesDoLeilao(leilaoId);
         return arrematacoes.stream()
@@ -141,7 +135,6 @@ public class ArrematacaoService {
                 .toList();
     }
 
-    @Cacheable(value = "arrematacoes-feed-assinadas", key = "#leilaoId", unless = "#result.isEmpty()")
     public List<ArrematacaoFeedDto> buscatrAutoAssinada(Long leilaoId) {
         var arrematacoes = arrematacaoRepository.buscarUltimasArrematacoesDoLeilao(leilaoId);
         return arrematacoes.stream()
@@ -149,7 +142,6 @@ public class ArrematacaoService {
                 .toList();
     }
 
-    @CacheEvict(value = {"arrematacoes-feed", "arrematacoes-feed-nulas", "arrematacoes-feed-assinadas"}, key = "#root.target.getLeilaoIdByArrematacaoId(#arrematacaoId)", beforeInvocation = true)
     public ArrematacaoEntity editarValorArrematacao(Long arrematacaoId, ArrematacaoRequestEditValDto data) {
         var arrematacao = arrematacaoRepository.findById(arrematacaoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Arrematação não encontrada."));
@@ -163,7 +155,6 @@ public class ArrematacaoService {
     }
 
     @Transactional
-    @CacheEvict(value = {"arrematacoes-feed", "arrematacoes-feed-nulas", "arrematacoes-feed-assinadas"}, key = "#root.target.getLeilaoIdByArrematacaoId(#arrematacaoId)", beforeInvocation = true)
     public ArrematacaoEntity mudarPlacaArrematante(Long arrematacaoId, ArrematacaoUpdatePlacaDto data) {
         var arrematacao = arrematacaoRepository.findById(arrematacaoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Arrematação não encontrada."));
@@ -181,12 +172,6 @@ public class ArrematacaoService {
         arrematacao.setUrlAutoPdf(null);
 
         return arrematacaoRepository.save(arrematacao);
-    }
-
-    public Long getLeilaoIdByArrematacaoId(Long arrematacaoId) {
-        return arrematacaoRepository.findById(arrematacaoId)
-                .map(a -> a.getLote() != null && a.getLote().getLeilao() != null ? a.getLote().getLeilao().getId() : -1L)
-                .orElse(-1L);
     }
 
 }
