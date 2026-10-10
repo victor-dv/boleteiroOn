@@ -25,8 +25,9 @@ public class LoteEntity {
 
     private String descricao;
 
+    @Column(name = "lance_inicial")
     private BigDecimal valorInicial;
-
+    @Column(name = "valor_avaliacao")
     private BigDecimal valorAvaliacao;
 
 }
