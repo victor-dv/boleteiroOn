@@ -6,14 +6,18 @@ public record LoteResponseDto(
         Long id,
         Long leilaoId,
         Integer numeroLote,
-        String descricao
+        String descricao,
+        Double valorInicial,
+        Double valorAvaliacao
 ) {
     public LoteResponseDto(LoteEntity entity) {
         this(
                 entity.getId(),
                 entity.getLeilao().getId(),
                 entity.getNumeroLote(),
-                entity.getDescricao()
+                entity.getDescricao(),
+                entity.getValorInicial(),
+                entity.getValorAvaliacao()
         );
     }
 }

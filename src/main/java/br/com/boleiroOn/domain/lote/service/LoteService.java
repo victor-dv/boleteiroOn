@@ -39,6 +39,8 @@ public class LoteService {
         lote.setLeilao(leilao);
         lote.setNumeroLote(data.numeroLote());
         lote.setDescricao(data.descricao());
+        lote.setValorInicial(data.valorInicial());
+        lote.setValorAvaliacao(data.valorAvaliacao());
 
         return loteRepository.save(lote);
     }
@@ -61,6 +63,8 @@ public class LoteService {
 
                 int numeroLote = (int) row.getCell(0).getNumericCellValue();
                 String descricao = row.getCell(1).getStringCellValue();
+                double avaliacao = row.getCell(2).getNumericCellValue();
+                double valorInicial = row.getCell(3).getNumericCellValue();
 
                 if (loteRepository.existsByLeilaoIdAndNumeroLote(leilaoId, numeroLote)) {
                     continue;
@@ -70,6 +74,9 @@ public class LoteService {
                 lote.setLeilao(leilao);
                 lote.setNumeroLote(numeroLote);
                 lote.setDescricao(descricao);
+                lote.setValorInicial(valorInicial);
+                lote.setValorAvaliacao(avaliacao);
+
 
                 lotesParaSalvar.add(lote);
             }
@@ -105,6 +112,13 @@ public class LoteService {
 
         if (data.descricao() != null) {
             lote.setDescricao(data.descricao());
+        }
+
+        if (data.valorInicial() != null) {
+            lote.setValorInicial(data.valorInicial());
+        }
+        if (data.valorAvaliacao() != null) {
+            lote.setValorAvaliacao(data.valorAvaliacao());
         }
 
         return loteRepository.save(lote);

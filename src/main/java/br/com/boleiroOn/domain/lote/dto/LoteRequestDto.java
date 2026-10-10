@@ -13,6 +13,12 @@ public record LoteRequestDto (
         Integer numeroLote,
 
         @NotBlank
-        String descricao
+        String descricao,
+
+        @NotNull
+        Double valorInicial,
+
+        @NotNull
+        Double valorAvaliacao
 ) {
 }

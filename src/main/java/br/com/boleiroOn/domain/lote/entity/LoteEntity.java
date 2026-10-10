@@ -23,4 +23,8 @@ public class LoteEntity {
 
     private String descricao;
 
+    private Double valorInicial;
+
+    private Double valorAvaliacao;
+
 }
