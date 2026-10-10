@@ -40,9 +40,26 @@ public class PdfGeradorService {
                 ? formatadorMoeda.format(arrematacao.getValorComissao())
                 : "R$ 0,00");
 
+        // Dados do lote para informações de pagamento
         if (arrematacao.getLote() != null) {
-            context.setVariable("numeroLote", arrematacao.getLote().getNumeroLote());
+            var lote = arrematacao.getLote();
+            context.setVariable("numeroLote", lote.getNumeroLote());
+            
+            context.setVariable("valorInicial", lote.getValorInicial() != null
+                    ? formatadorMoeda.format(lote.getValorInicial())
+                    : "R$ 0,00");
+            context.setVariable("valorAvaliacao", lote.getValorAvaliacao() != null
+                    ? formatadorMoeda.format(lote.getValorAvaliacao())
+                    : "R$ 0,00");
         }
+
+        // Dados bancários do leiloeiro
+        context.setVariable("banco", "Itaú");
+        context.setVariable("agencia", "5198");
+        context.setVariable("conta", "08942-6");
+        context.setVariable("cpfCnpj", "134.778.778-02");
+        context.setVariable("pix", "134.778.778-02");
+        context.setVariable("titular", "ANTONIO CARLOS SEOANES");
 
         if (arrematacao.getArrematante() != null) {
             var arrematante = arrematacao.getArrematante();

@@ -159,6 +159,38 @@
     </div>
 </div>
 
+<div class="secao" style="background-color: #f0f4f8; border-left-color: #2c3e50;">
+    <h3>Informações de Pagamento</h3>
+    <div class="info-grid">
+        <div class="info-row">
+            <div class="info-cell"><strong>Valor da Avaliação:</strong> <span th:text="${valorAvaliacao}">R$ 0,00</span></div>
+            <div class="info-cell"><strong>Valor Inicial (Lance Inicial):</strong> <span th:text="${valorInicial}">R$ 0,00</span></div>
+        </div>
+        <div class="info-row">
+            <div class="info-cell"><strong>Valor da Arrematação:</strong> <span th:text="${valorArremate}">R$ 0,00</span></div>
+            <div class="info-cell"><strong>Comissão (5%):</strong> <span th:text="${valorComissao}">R$ 0,00</span></div>
+        </div>
+    </div>
+    <div style="margin-top: 10px; padding: 10px; background-color: #e8f0fe; border-radius: 4px; border: 1px solid #d0d8e8;">
+        <p style="margin: 2px 0; font-weight: bold; color: #1a237e; font-size: 11px;">Valor Total a Pagar: <span th:text="${valorArremate}">R$ 0,00</span></p>
+    </div>
+    <h4 style="margin: 12px 0 6px 0; color: #2c3e50; font-size: 11px;">Dados Bancários do Leiloeiro</h4>
+    <div class="info-grid" style="font-size: 10.5px;">
+        <div class="info-row">
+            <div class="info-cell"><strong>Banco:</strong> <span th:text="${banco}">Itaú</span></div>
+            <div class="info-cell"><strong>Agência:</strong> <span th:text="${agencia}">5198</span></div>
+        </div>
+        <div class="info-row">
+            <div class="info-cell"><strong>Conta:</strong> <span th:text="${conta}">08942-6</span></div>
+            <div class="info-cell"><strong>CPF/CNPJ:</strong> <span th:text="${cpfCnpj}">134.778.778-02</span></div>
+        </div>
+        <div class="info-row">
+            <div class="info-cell"><strong>PIX (CPF):</strong> <span th:text="${pix}">134.778.778-02</span></div>
+            <div class="info-cell"><strong>Titular:</strong> <span th:text="${titular}">ANTONIO CARLOS SEOANES</span></div>
+        </div>
+    </div>
+</div>
+
 <div class="secao-info">
     <h3>Condições de Venda</h3>
     <p>&#8226; Não é permitido a troca de arrematante do leilão. Portanto a Nota de Venda em Leilão será emitida em nome do arrematante.</p>
