@@ -40,6 +40,16 @@ public class PdfGeradorService {
                 ? formatadorMoeda.format(arrematacao.getValorComissao())
                 : "R$ 0,00");
 
+        // Valor total a pagar = arrematação + comissão
+        BigDecimal valorTotal = BigDecimal.ZERO;
+        if (arrematacao.getValorArrematacao() != null) {
+            valorTotal = valorTotal.add(arrematacao.getValorArrematacao());
+        }
+        if (arrematacao.getValorComissao() != null) {
+            valorTotal = valorTotal.add(arrematacao.getValorComissao());
+        }
+        context.setVariable("valorTotalPagar", formatadorMoeda.format(valorTotal));
+
         // Dados do lote para informações de pagamento
         if (arrematacao.getLote() != null) {
             var lote = arrematacao.getLote();
