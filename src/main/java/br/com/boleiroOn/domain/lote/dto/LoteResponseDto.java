@@ -2,13 +2,15 @@ package br.com.boleiroOn.domain.lote.dto;
 
 import br.com.boleiroOn.domain.lote.entity.LoteEntity;
 
+import java.math.BigDecimal;
+
 public record LoteResponseDto(
         Long id,
         Long leilaoId,
         Integer numeroLote,
         String descricao,
-        Double valorInicial,
-        Double valorAvaliacao
+        BigDecimal valorInicial,
+        BigDecimal valorAvaliacao
 ) {
     public LoteResponseDto(LoteEntity entity) {
         this(

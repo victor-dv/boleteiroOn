@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import java.math.BigDecimal;
+
 public record LoteRequestDto (
         @NotNull
         Long leilaoId,
@@ -16,9 +18,9 @@ public record LoteRequestDto (
         String descricao,
 
         @NotNull
-        Double valorInicial,
+        BigDecimal valorInicial,
 
         @NotNull
-        Double valorAvaliacao
+        BigDecimal valorAvaliacao
 ) {
 }

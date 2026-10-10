@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,8 +64,8 @@ public class LoteService {
 
                 int numeroLote = (int) row.getCell(0).getNumericCellValue();
                 String descricao = row.getCell(1).getStringCellValue();
-                double avaliacao = row.getCell(2).getNumericCellValue();
-                double valorInicial = row.getCell(3).getNumericCellValue();
+                BigDecimal avaliacao = BigDecimal.valueOf(row.getCell(2).getNumericCellValue());
+                BigDecimal valorInicial = BigDecimal.valueOf(row.getCell(3).getNumericCellValue());
 
                 if (loteRepository.existsByLeilaoIdAndNumeroLote(leilaoId, numeroLote)) {
                     continue;

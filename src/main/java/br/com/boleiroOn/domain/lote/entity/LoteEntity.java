@@ -4,6 +4,8 @@ import br.com.boleiroOn.domain.leilao.entity.LeilaoEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "lotes")
 @Data
@@ -23,8 +25,8 @@ public class LoteEntity {
 
     private String descricao;
 
-    private Double valorInicial;
+    private BigDecimal valorInicial;
 
-    private Double valorAvaliacao;
+    private BigDecimal valorAvaliacao;
 
 }
