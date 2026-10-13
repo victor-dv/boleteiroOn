@@ -76,9 +76,9 @@ public class RelatorioService {
 
             }
 
-            for (int i = 0; i < columns.length; i++) {
-                sheet.autoSizeColumn(i);
-            }
+        // for (int i = 0; i < columns.length; i++) {
+        //   sheet.autoSizeColumn(i);
+            //  }
 
             workbook.write(out);
             return out.toByteArray();
