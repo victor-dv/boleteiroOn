@@ -68,7 +68,7 @@ public class RelatorioService {
                 row.createCell(4).setCellValue(dto.arrematanteCel());
                 row.createCell(5).setCellValue(dto.valorArrematacao() != null ? dto.valorArrematacao().doubleValue() : 0.0);
                 row.createCell(6).setCellValue(dto.valorComissao() != null ? dto.valorComissao().doubleValue() : 0.0);
-                row.createCell(7).setCellValue(dto.totalPagar() != null ? dto.totalPagar().doubleValue() : 0.0);
+                row.createCell(7).setCellValue(dto.getTotalPagar().doubleValue());
                 row.createCell(8).setCellValue(dto.arrematanteCep());
                 row.createCell(9).setCellValue(dto.arrematanteEndereco());
                 row.createCell(10).setCellValue(dto.arrematanteCidade());
