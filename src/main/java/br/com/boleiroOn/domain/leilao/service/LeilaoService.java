@@ -6,7 +6,6 @@ import br.com.boleiroOn.domain.leilao.dto.LeilaoResponseDto;
 import br.com.boleiroOn.domain.leilao.entity.LeilaoEntity;
 import br.com.boleiroOn.domain.leilao.repository.LeilaoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,7 +55,6 @@ public class LeilaoService {
         return leilaoRepository.save(leilao);
     }
 
-    @Cacheable(value = "leiloes", key = "'all'", unless = "#result.isEmpty()")
     public List<LeilaoEntity> getAll() {
         return leilaoRepository.findAll();
     }
@@ -75,12 +73,10 @@ public class LeilaoService {
         return leilaoRepository.save(leilao);
     }
 
-    @Cacheable(value = "leiloes-status", key = "#status", unless = "#result.isEmpty()")
     public List<LeilaoEntity> getByStatus(boolean status) {
         return leilaoRepository.findByStatus(status);
     }
 
-    @Cacheable(value = "leilao-detalhado", key = "#id", unless = "#result == null")
     public LeilaoEntity findById(Long id) {
         return leilaoRepository.findById(id).orElse(null);
     }
