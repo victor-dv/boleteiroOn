@@ -38,7 +38,8 @@ public interface RelatorioRepository extends JpaRepository<DocumentoAuditoriaEnt
                 a.valorArrematacao,
                 a.valorComissao,
                 a.status,
-                a.dataArrematacao
+                a.dataArrematacao,
+                a.vendaCondicional
             )
             FROM ArrematacaoEntity a
             LEFT JOIN a.arrematante ar

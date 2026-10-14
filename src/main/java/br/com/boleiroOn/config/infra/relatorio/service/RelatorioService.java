@@ -51,7 +51,7 @@ public class RelatorioService {
             headerStyle.setFont(font);
 
             Row headerRow = sheet.createRow(0);
-            String[] columns = {"Lote", "Arrematante", "Email", "CPF", "Celular", "Valor Arrematação", "Comissão", "Total a Pagar", "Cep","Endereço", "Cidade", "UF"};
+            String[] columns = {"Lote", "Arrematante", "Email", "CPF", "Celular", "Valor Arrematação", "Comissão", "Total a Pagar", "Condicional", "Cep","Endereço", "Cidade", "UF"};
             for (int i = 0; i < columns.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(columns[i]);
@@ -69,16 +69,12 @@ public class RelatorioService {
                 row.createCell(5).setCellValue(dto.valorArrematacao() != null ? dto.valorArrematacao().doubleValue() : 0.0);
                 row.createCell(6).setCellValue(dto.valorComissao() != null ? dto.valorComissao().doubleValue() : 0.0);
                 row.createCell(7).setCellValue(dto.getTotalPagar().doubleValue());
-                row.createCell(8).setCellValue(dto.arrematanteCep());
-                row.createCell(9).setCellValue(dto.arrematanteEndereco());
-                row.createCell(10).setCellValue(dto.arrematanteCidade());
-                row.createCell(11).setCellValue(dto.arrematanteUf());
-
+                row.createCell(8).setCellValue(dto.vendaCondicional() ? "Sim" : "Não");
+                row.createCell(9).setCellValue(dto.arrematanteCep());
+                row.createCell(10).setCellValue(dto.arrematanteEndereco());
+                row.createCell(11).setCellValue(dto.arrematanteCidade());
+                row.createCell(12).setCellValue(dto.arrematanteUf());
             }
-
-        // for (int i = 0; i < columns.length; i++) {
-        //   sheet.autoSizeColumn(i);
-            //  }
 
             workbook.write(out);
             return out.toByteArray();
