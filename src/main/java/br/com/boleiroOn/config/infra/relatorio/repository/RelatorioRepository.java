@@ -23,7 +23,7 @@ public interface RelatorioRepository extends JpaRepository<DocumentoAuditoriaEnt
                 (SELECT COUNT(a) FROM ArrematacaoEntity a WHERE a.lote.leilao.id = l.id),
                 (SELECT SUM(a.valorArrematacao) FROM ArrematacaoEntity a WHERE a.lote.leilao.id = l.id),
                 (SELECT SUM(a.valorComissao) FROM ArrematacaoEntity a WHERE a.lote.leilao.id = l.id),
-                (SELECT COALESCE(SUM(lt.valorAvaliacao), 0) FROM LoteEntity lt WHERE lt.leilao.id = l.id)
+                (SELECT COALESCE(SUM(lt.valorInicial), 0) FROM LoteEntity lt WHERE lt.leilao.id = l.id)
             )
             FROM LeilaoEntity l
             WHERE l.id = :leilaoId
