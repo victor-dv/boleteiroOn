@@ -45,6 +45,9 @@
         private String cidade;
         private String uf;
 
+        @Column(name = "observacao", length = 1000)
+        private String observacao;
+
         @Column(name = "email_validado", nullable = false)
         private boolean emailValidado = false;
     }

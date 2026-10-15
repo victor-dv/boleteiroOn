@@ -3,6 +3,7 @@ package br.com.boleiroOn.domain.arrematante.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public record ArrematanteRequestDto(
         @NotNull
@@ -30,6 +31,9 @@ public record ArrematanteRequestDto(
         String cep,
         String cidade,
         String endereco,
-        String uf
+        String uf,
+
+        @Size(max = 1000)
+        String observacao
 ) {
 }

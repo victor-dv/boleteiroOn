@@ -17,6 +17,7 @@ public record ArrematanteDetalhadoResponseDto(
         String cep,
         String cidade,
         String uf,
+        String observacao,
 
         LeilaoDetalhadoResponseDto leilao
 ) {
@@ -26,6 +27,7 @@ public record ArrematanteDetalhadoResponseDto(
                 entity.getPlaca(), entity.getEmail(), entity.getUrlFotoDocumento(),
                 entity.getDocumento(),entity.getTelefone(), entity.getCelular(), entity.getRg(), entity.getEndereco(),
                 entity.getCep(), entity.getCidade(), entity.getUf(),
+                entity.getObservacao(),
 
                 new LeilaoDetalhadoResponseDto(entity.getLeilao())
         );

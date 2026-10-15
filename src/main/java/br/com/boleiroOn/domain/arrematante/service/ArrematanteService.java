@@ -55,6 +55,7 @@ public class ArrematanteService {
         arrematante.setCep(data.cep());
         arrematante.setCidade(data.cidade());
         arrematante.setUf(data.uf());
+        arrematante.setObservacao(data.observacao());
 
         arrematante = arrematanteRepository.save(arrematante);
 
@@ -102,6 +103,7 @@ public class ArrematanteService {
         arr.setCidade(data.cidade() != null ? data.cidade() : arr.getCidade());
         arr.setEndereco(data.endereco() != null ? data.endereco() : arr.getEndereco());
         arr.setUf(data.uf() != null ? data.uf() : arr.getUf());
+        arr.setObservacao(data.observacao());
 
         return arrematanteRepository.save(arr);
     }
