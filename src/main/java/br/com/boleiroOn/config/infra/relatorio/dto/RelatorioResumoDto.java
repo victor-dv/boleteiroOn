@@ -8,5 +8,6 @@ public record RelatorioResumoDto(
     Long totalLotes,
     Long lotesArrematados,
     BigDecimal valorTotalArrematado,
-    BigDecimal totalComissao
+    BigDecimal totalComissao,
+    BigDecimal totalEstimado
 ) {}

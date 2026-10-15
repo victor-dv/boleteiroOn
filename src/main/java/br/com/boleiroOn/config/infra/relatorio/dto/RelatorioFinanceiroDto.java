@@ -13,5 +13,7 @@ public record RelatorioFinanceiroDto(
     BigDecimal valorComissao,
     StatusPagamentoArrematacao status,
     OffsetDateTime dataArrematacao,
-    boolean vendaCondicional
+    boolean vendaCondicional,
+    BigDecimal valorInicial,
+    BigDecimal valorAvaliacao
 ) {}

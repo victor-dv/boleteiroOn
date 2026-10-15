@@ -22,7 +22,8 @@ public interface RelatorioRepository extends JpaRepository<DocumentoAuditoriaEnt
                 (SELECT COUNT(lt) FROM LoteEntity lt WHERE lt.leilao.id = l.id),
                 (SELECT COUNT(a) FROM ArrematacaoEntity a WHERE a.lote.leilao.id = l.id),
                 (SELECT SUM(a.valorArrematacao) FROM ArrematacaoEntity a WHERE a.lote.leilao.id = l.id),
-                (SELECT SUM(a.valorComissao) FROM ArrematacaoEntity a WHERE a.lote.leilao.id = l.id)
+                (SELECT SUM(a.valorComissao) FROM ArrematacaoEntity a WHERE a.lote.leilao.id = l.id),
+                (SELECT COALESCE(SUM(lt.valorAvaliacao), 0) FROM LoteEntity lt WHERE lt.leilao.id = l.id)
             )
             FROM LeilaoEntity l
             WHERE l.id = :leilaoId
@@ -39,7 +40,9 @@ public interface RelatorioRepository extends JpaRepository<DocumentoAuditoriaEnt
                 a.valorComissao,
                 a.status,
                 a.dataArrematacao,
-                a.vendaCondicional
+                a.vendaCondicional,
+                lt.valorInicial,
+                lt.valorAvaliacao
             )
             FROM ArrematacaoEntity a
             LEFT JOIN a.arrematante ar
@@ -81,7 +84,9 @@ public interface RelatorioRepository extends JpaRepository<DocumentoAuditoriaEnt
             ar.uf,
             a.vendaCondicional,
             a.valorArrematacao,
-            a.valorComissao
+            a.valorComissao,
+            lt.valorInicial,
+            lt.valorAvaliacao
         )
         FROM ArrematacaoEntity a
         LEFT JOIN a.arrematante ar

@@ -14,8 +14,10 @@ public record RelatorioExcelDto(
         String arrematanteUf,
         boolean vendaCondicional,
         BigDecimal valorArrematacao,
-        BigDecimal valorComissao
-) {
+        BigDecimal valorComissao,
+        BigDecimal valorInicial,
+        BigDecimal valorAvaliacao
+        ) {
         // Método que calcula a soma em tempo real no Java
         public BigDecimal getTotalPagar() {
                 BigDecimal arrematacao = valorArrematacao != null ? valorArrematacao : BigDecimal.ZERO;
